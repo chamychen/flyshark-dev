@@ -1,0 +1,46 @@
+{
+  "private": true,
+  "engines": {
+    "node": ">=4"
+  },
+  "devDependencies": {
+    "babel-core":"^6.26.0",
+    "babel-preset-es2015":"^6.24.1",
+    "babel-register":"^6.26.0",
+    "browser-sync":"^2.23.6",
+    "del":"^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer":"^5.0.0",
+    "gulp-babel":"^7.0.1",
+    "gulp-cache":"^1.0.2",
+    "gulp-cssnano":"^2.1.3",
+    "gulp-eslint":"^4.0.2",
+    "gulp-filter":"^5.1.0",
+    "gulp-htmlmin":"^4.0.0",
+    "gulp-if":"^2.0.2",
+    "gulp-imagemin":"^4.1.0",
+    "gulp-load-plugins":"^1.5.0",
+    "gulp-plumber":"^1.2.0",
+    "gulp-sass":"^4.0.1",
+    "gulp-size":"^3.0.0",
+    "gulp-sourcemaps":"^2.6.4",
+    "gulp-uglify":"^3.0.0",
+    "gulp-useref":"^3.1.5",
+    "main-bower-files":"^2.13.1",
+    "run-sequence":"^2.2.1",
+    "wiredep":"^4.0.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true,
+      "browser": true
+    },
+    "rules": {
+      "quotes": [
+        2,
+        "single"
+      ]
+    }
+  }
+}

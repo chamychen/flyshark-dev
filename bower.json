@@ -1,0 +1,11 @@
+{
+  "name": "flyshark-dev",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "~4.0.0-alpha.6",
+    "modernizr": "~2.8.1",
+    "jquery": "~3.2.1",
+    "alertifyjs":"~1.0.11",
+    "jqGrid":"~5.3.1"
+  }
+}
