@@ -28,7 +28,9 @@
     "gulp-useref": "^3.1.5",
     "main-bower-files": "^2.13.1",
     "run-sequence": "^2.2.1",
-    "wiredep": "^4.0.0"
+    "wiredep": "^4.0.0",
+    "typescript": "^2.8.1",
+    "gulp-typescript": "^4.0.2"
   },
   "eslintConfig": {
     "env": {
