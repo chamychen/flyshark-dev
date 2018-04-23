@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0,shrink-to-fit=no, user-scalable=0, minimal-ui">
     <!--IOS设备快捷按钮图标-->
-    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="apple-touch-icon" id="appleTouchIcon" />
     <!--浏览器中地址栏左侧显示的图标-->
-    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="shortcut icon" id="faviconIcon" />
     <title>飞鲨 | 开发者平台</title>
     <!-- Bootstrap and site stylesheets -->
     <link rel="stylesheet" href="/scripts/assets/bootstrap/bootstrap.css?v=@@hash" crossorigin="anonymous">
@@ -68,8 +68,8 @@
                 <i class="icon md-more" aria-hidden="true"></i>
             </button>
             <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-                <img class="navbar-brand-logo" src="/images/logo.png" title="Remark" />
-                <span class="navbar-brand-text hidden-xs-down"> Remark</span>
+                <img class="navbar-brand-logo" id="logo" />
+                <span class="navbar-brand-text hidden-xs-down" id="systemName"></span>
             </div>
         </div>
 
@@ -87,7 +87,7 @@
                         </a>
                     </li>
                     <li class="nav-item hidden-sm-down" id="toggleFullscreen">
-                        <a class="nav-link icon md-fullscreen" data-toggle="fullscreen" href="#" role="button">
+                        <a class="nav-link icon md-fullscreen" data-toggle="fullscreen" href="#" role="button" style="font-size: 20px;">
                             <span class="sr-only">Toggle fullscreen</span>
                         </a>
                     </li>
@@ -98,7 +98,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false" data-animation="scale-up" role="button">
                             <span class="avatar avatar-online">
-                                <img src="/images/portraits/1.jpg" alt="...">
+                                <img id="portraits" alt="...">
                                 <i></i>
                             </span>
                         </a>
@@ -227,7 +227,43 @@
         </div>
     </nav>
     <div class="site-menubar" id="flysharkMenu">
+        <ul class='site-menu'>
+            <li class='site-menu-item has-sub'>
+                <a href='javascript:void(0)' id="1">
+                    <i class='site-menu-icon md-view-dashboard' aria-hidden='true'></i>
+                    <span class='site-menu-title'>平台初始化</span>
+                    <span class='site-menu-arrow'></span>
+                </a>
+                <ul class='site-menu-sub'>
+                    <li class='site-menu-item'>
+                        <a href='javascript:void(0)' id="2" onclick='toMenu(this.id)'>
+                            <span class='site-menu-title'>菜单划分</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class='site-menu-item has-sub'>
+                <a href='javascript:void(0)' id="3">
+                    <i class='site-menu-icon md-palette' aria-hidden='true'></i>
+                    <span class='site-menu-title'>设计平台</span>
+                    <span class='site-menu-arrow'></span>
+                </a>
+                <ul class='site-menu-sub'>
+                    <li class='site-menu-item'>
+                        <a href='javascript:void(0)' id="4" onclick='toMenu(this.id)'>
+                            <span class='site-menu-title'>模块设计</span>
+                        </a>
+                    </li>
+                    <li class='site-menu-item'>
+                        <a href='javascript:void(0)' id="5" onclick='toMenu(this.id)'>
+                            <span class='site-menu-title'>组件设计</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
     </div>
+
     <!-- Page -->
     <div class="page animsition">
         <div class="page-content container-fluid">
@@ -296,7 +332,7 @@
     <script src="/scripts/assets/remark/custom/switchery.js?v=@@hash"></script>
     <script src="/scripts/assets/remark/custom/matchheight.js?v=@@hash"></script>
     <script src="/scripts/assets/remark/custom/v1.js?v=@@hash"></script>
-    <script src="/scripts/app/a-main.js?v=@@hash"></script>
+    <script src="/scripts/entry/index-entry.js?v=@@hash"></script>
     <!-- Google Analytics -->
     <script>
         var a = '/scripts/assets/remark/Component.js?v=@@hash';

@@ -11,7 +11,7 @@ const wiredep = require('wiredep').stream;
 
 const dev = true;//是否开发环境
 const isCygProd = false;//是否模拟生产环境
-const isPrintWitch = false;//是否启用打印
+let isPrintWitch = false;//是否启用打印
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;// 自动刷新函数
@@ -36,7 +36,7 @@ let printWitch = function () {
 //系统路径
 let system_paths = {
   sass: { all: 'app/styles/**/*.scss', compile: ['app/styles/**/*.scss'], tmp: ['.tmp/styles/**'] },
-  ts: { all: 'app/typescripts/**/*.ts', compile: 'app/typescripts/**/*-main.ts', tmp: ['.tmp/scripts/**'] },
+  ts: { all: 'app/typescripts/**/*.ts', compile: 'app/typescripts/**/*-entry.ts', tmp: ['.tmp/scripts/**'] },
   css: ['dist/**/*.css', '!dist/**/*.min.css'],
   js: ['dist/**/*.js', 'dist/**/*.min.js'],
   html: ['dist/**/*.html'],
@@ -153,7 +153,7 @@ gulp.task('rev', function () {
     .pipe(printWitch())
     .pipe($.revAppend())//替换JS/CSS路径
     .pipe(gulp.dest('dist'))
-    .pipe(reload({ stream: true }));
+  //.pipe(reload({ stream: true }));
 })
 
 //生成发布包
@@ -179,6 +179,8 @@ gulp.task('browser-sync', function () {
       index: "index.html",
     },
   });
+
+  isPrintWitch = true;
 
   //监测ts
   gulp.watch([system_paths.ts.all]).

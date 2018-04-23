@@ -1,27 +1,24 @@
 namespace flyshark.entity {
     export class Menu {
-
-        static cc: string = "2";
-
-        menuId: String;
+        menuId: string;
 
 
-        parentMenuId: String;
+        parentMenuId: string;
 
 
-        longCode: String;
+        longCode: string;
 
 
-        linkName: String;
+        linkName: string;
 
 
-        menuTitle: String;
+        menuTitle: string;
 
 
-        url: String;
+        url: string;
 
 
-        iconClass: String;
+        iconClass: string;
 
 
         isDisabled: number;
