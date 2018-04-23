@@ -7,7 +7,7 @@ namespace flyshark.entity {
     /**
      * 用户基本信息
      */
-    export class UserBaseInfo {
+    export class UserBaseInfoEntity {
         name: string;
         tokenId: string;
         portraitsUrl: string;

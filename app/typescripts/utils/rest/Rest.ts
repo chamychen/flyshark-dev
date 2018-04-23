@@ -1,3 +1,5 @@
+///<reference path="RestMethod.ts" />
+
 namespace flyshark.utils.rest {
     export interface Rest {
         /**

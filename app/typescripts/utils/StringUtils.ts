@@ -114,6 +114,28 @@ namespace flyshark.utils {
             }
             return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
         }
+
+        /**
+         * 格式化字符串
+         * 
+         * @static
+         * @param {string} str 输入字符串
+         * @param {Array<any>} args 参数
+         * @returns {string} 
+         * @memberof StringUtils
+         */
+        public static format(str: string, args: Array<any>): string {
+            if (!args || args.length == 0) {
+                return null;
+            }
+            else {
+                for (var i = 0; i < args.length; i++) {
+                    var re = new RegExp('\\{' + (i) + '\\}', 'gm');
+                    str = str.replace(re, args[i]);
+                }
+                return str;
+            }
+        }
     }
 }
 

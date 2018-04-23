@@ -1,5 +1,5 @@
 namespace flyshark.entity {
-    export class Menu {
+    export class MenuEntity {
         menuId: string;
 
 
