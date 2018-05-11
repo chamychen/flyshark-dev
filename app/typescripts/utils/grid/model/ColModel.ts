@@ -63,6 +63,14 @@ namespace flyshark.utils.grid.model {
         width: number;
 
         /**
+         * 最小宽度
+         * 
+         * @type {number}
+         * @memberof ColModel
+         */
+        minWidth: number;
+
+        /**
          * 列宽度是否固定不可变
          * 
          * @type {boolean}
@@ -181,6 +189,7 @@ namespace flyshark.utils.grid.model {
             this.index = name;
             this.label = title;
             this.width = width;
+            this.minWidth = width;
             this.fixed = fixed;
             this.formatter = formatter;
         }

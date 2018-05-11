@@ -18364,8 +18364,17 @@
                 if ($.isFunction($t.p.afterSetTreeNode)) {
                     $t.p.afterSetTreeNode.call($t, index, len);
                 }
-                var newWidth = 35 * (maxLevel + 1);
-                $($t).jqGrid("setColWidthN", $t.p.ExpandColumn, newWidth <= 80 ? 80 : newWidth);
+                
+                $($t.p.colModel).each(function(){
+                    var cmName=this.name;
+                    if(cmName==$t.p.ExpandColumn){
+                        var minWidth=this.minWidth;
+                        var newWidth = 35 * (maxLevel + 1);
+                        $($t).jqGrid("setColWidthN", $t.p.ExpandColumn, newWidth <= minWidth ? minWidth : newWidth);  
+                    }
+                });
+              
+               
             });
         },
         setTreeGrid: function () {

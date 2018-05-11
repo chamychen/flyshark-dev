@@ -24,7 +24,7 @@ namespace flyshark.utils.grid.model {
     import TreeReader = flyshark.utils.grid.model.TreeReader;
     import ColModel = flyshark.utils.grid.model.ColModel;
     import ColModelFactory = flyshark.utils.grid.ColModelFactory;
-    
+
     export class GridOption {
         /**
          * 加载原始数据
@@ -187,6 +187,14 @@ namespace flyshark.utils.grid.model {
         ExpandColumn: string;
 
         /**
+         * 展开列最小宽度
+         * 
+         * @type {number}
+         * @memberof GridOption
+         */
+        ExpandColumnMinWidth: number = 200;
+
+        /**
          * treeGrid参数：当为true时，点击展开行的文本时，treeGrid就能展开或者收缩，不仅仅是点击图标时展开/收缩
          */
         ExpandColClick: boolean;
@@ -309,7 +317,8 @@ namespace flyshark.utils.grid.model {
             })
             //如果没有定义非固定列宽的列，则默认加一列，填充满表格
             if (!hasNotFixedCol) {
-                let emptyCol = new ColModel("", "", 1, false);
+                let emptyCol = ColModelFactory.createDefaultColModel("", "", 1, false);
+                emptyCol.canGetValue = false;
                 optimizeColModels.push(emptyCol);
             }
             this.hasNotFixedCol = hasNotFixedCol;
@@ -325,7 +334,7 @@ namespace flyshark.utils.grid.model {
                     this.btnModels = [];
                 }
             }
-            let eventModel = new EventModel("GridHandler.onSearchExtendBtnClick(this)");
+            let eventModel = new EventModel("flyshark.utils.grid.GridHandler.onSearchExtendBtnClick(this)");
             let searchExtendBtn = new BtnModel(this.id + "-search", "展开搜索条件区域", [eventModel], "icon fa-hourglass-1 search-control-icon", true, "btn-default");
             searchExtendBtn.htmlAttributtes = { dependon: this.id };
             this.btnModels.push(searchExtendBtn);
@@ -391,12 +400,14 @@ namespace flyshark.utils.grid.model {
             grid.jqGrid(this);
             grid.jqGrid('bindKeys'); //支持键盘       
             this.renderGridBtn(); //渲染按钮 
+
             if (this.editMode == EditMode.OnlyView) {
                 grid.addClass("only-view"); //表格仅查看
             }
             if (this.isSingleTable) {
                 grid.addClass("single-table");//设为单页自适应表格
             }
+            $(grid).autoSize();
         }
     }
 }

@@ -64,13 +64,15 @@ namespace flyshark.utils.grid {
                     colModel.fixed = true;
                     break;
                 case TreeColType.LongCodeField:
-                    colModel.width = 200;
-                    colModel.fixed = false;
+                    colModel.width = 120;
+                    colModel.fixed = true;
                     break;
                 case TreeColType.ParentField:
                     colModel.hidden = true;
+                    colModel.fixed = true;
                     break;
             }
+            colModel.minWidth = colModel.width;
             return colModel;
         }
 

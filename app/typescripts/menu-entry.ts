@@ -31,7 +31,7 @@ namespace flyshark {
             let longCode = ColModelFactory.createTreeColModel("longCode", TreeColType.LongCodeField);
             let menuTitle = ColModelFactory.createEditColModel("menuTitle", "菜单标题", 250, false);
             let url = ColModelFactory.createEditColModel("url", "URL链接地址", 300, false);
-            let iconClass = ColModelFactory.createEditColModel("iconClass", "IconClass", 100, false);
+            let iconClass = ColModelFactory.createEditColModel("iconClass", "IconClass", 100);
             let linkName = ColModelFactory.createTreeColModel("linkName", TreeColType.LinkNameField);
             let status = ColModelFactory.createDefaultColModel("status", "状态");
             let sortNo = ColModelFactory.createHiddenColModel("sortNo");
