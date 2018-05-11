@@ -1,16 +1,24 @@
 ///<reference path="SystemService.ts" />
-///<reference path="../entity/SystemBaseInfoEntity.ts" />
-///<reference path="../entity/UserInfoEntity.ts" />
-///<reference path="../entity/UserBaseInfoEntity.ts" />
-///<reference path="../entity/MenuEntity.ts" />
+///<reference path="../../entity/SystemBaseInfoEntity.ts" />
+///<reference path="../../entity/UserInfoEntity.ts" />
+///<reference path="../../entity/UserBaseInfoEntity.ts" />
+///<reference path="../../entity/MenuEntity.ts" />
 
-namespace flyshark.service {
+namespace flyshark.service.system {
     import SystemBaseInfoEntity = flyshark.entity.SystemBaseInfoEntity;
     import UserInfoEntity = flyshark.entity.UserInfoEntity;
     import UserBaseInfoEntity = flyshark.entity.UserBaseInfoEntity;
     import MenuEntity = flyshark.entity.MenuEntity;
 
     export class SystemServiceImpl implements SystemService {
+        /**
+         * 当前目录
+         * 
+         * @type {MenuEntity}
+         * @memberof SystemServiceImpl
+         */
+        currentMenu: MenuEntity;
+
         public getSystemBaseInfo(): SystemBaseInfoEntity {
             let systemBaseInfo = new SystemBaseInfoEntity();
             systemBaseInfo.name = "飞鲨 | 开发者平台";
@@ -55,7 +63,7 @@ namespace flyshark.service {
             let menu2 = new MenuEntity();
             menu2.menuId = "2";
             menu2.menuTitle = "菜单划分";
-            menu2.url = "/page/design/menu.html";
+            menu2.url = "/page/menu/index.html";
             menu2.parentMenuId = "1";
             menu2.sortNo = 2;
             menu2.linkName = "平台初始化>菜单划分";

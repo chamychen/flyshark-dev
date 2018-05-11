@@ -153,7 +153,7 @@ gulp.task('rev', function () {
     .pipe(printWitch())
     .pipe($.revAppend())//替换JS/CSS路径
     .pipe(gulp.dest('dist'))
-  //.pipe(reload({ stream: true }));
+    .pipe(reload({ stream: true }));
 })
 
 //生成发布包
@@ -189,7 +189,7 @@ gulp.task('browser-sync', function () {
         'ts',
         'copy',
         isCygProd ?
-          gulp.series(gulp.parallel('imagemin', 'css', 'script'), 'rev') :
+          gulp.series(gulp.parallel('script'), 'rev') :
           gulp.series('rev')));
 
 
@@ -200,12 +200,12 @@ gulp.task('browser-sync', function () {
         'sass',
         'copy',
         isCygProd ?
-          gulp.series(gulp.parallel('imagemin', 'css', 'script'), 'rev') :
+          gulp.series(gulp.parallel('css'), 'rev') :
           gulp.series('rev')));
 
 
   //监测app文件夹
-  gulp.watch(['app/**', system_paths.ts.all, system_paths.sass.all]).
+  gulp.watch(['app/**', '!' + system_paths.ts.all, '!' + system_paths.sass.all]).
     on('change',
       gulp.series(
         'copy',

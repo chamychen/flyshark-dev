@@ -1,13 +1,13 @@
-///<reference path="../Common.d.ts" />
-///<reference path="../StringUtils.ts" />
-///<reference path="Menu.ts" />
+///<reference path="../../dts/jquery.d.ts" />
+///<reference path="../../dts/common.d.ts" />
+///<reference path="../../utils/StringUtils.ts" />
 ///<reference path='../../entity/MenuEntity.ts' />
-///<reference path='../../entity/UserDataEntity.ts' />
+///<reference path="Menu.ts" />
 
-
-namespace flyshark.utils.menu {
+namespace flyshark.service.menu {
+    import StringUtils = flyshark.utils.StringUtils;
     import MenuEntity = flyshark.entity.MenuEntity;
-    import UserDataEntity = flyshark.entity.UserDataEntity;
+
 
     /**
      * MMenu目录创建支持
@@ -34,78 +34,6 @@ namespace flyshark.utils.menu {
                 Site.run();
             }
         }
-
-        /**
-         * 跳转到目录
-         * 
-         * @param {string} menuId 
-         * @param {UserData} userData 
-         * @returns 
-         * @memberof MMenutImpl
-         */
-        public toMenu(menuId: string, userData: UserDataEntity): void {
-            if (!menuId || !userData || !userData.menuList || (userData.currentMenu && menuId == userData.currentMenu.menuId)) {
-                return;
-            }
-
-            let currentMenu: MenuEntity = null;
-            userData.menuList.forEach((menu: MenuEntity) => {
-                if (menu.menuId == menuId) {
-                    currentMenu = menu;
-                    return false;
-                }
-            })
-
-            if (currentMenu && currentMenu.url) {
-                $(".page").hide();
-                userData.currentMenu = currentMenu;
-                var html = this.setMenuActive(null, userData);
-                html = "<ol class='breadcrumb'>" + html + "</ol>";
-                $(".page-header .breadcrumb").remove("");
-                $(".page-header").prepend(html);
-                $(".page .page-content-body").load(currentMenu.url);
-                $(".page").fadeIn(1000);
-            }
-        }
-
-        /**
-     * 设置菜单被选中，返回路径的html
-     * @param iterationMenu
-     * @returns {string}
-     */
-        private setMenuActive(iterationMenu: MenuEntity, userData: UserDataEntity) {
-            var html = "";
-            //清除active目录
-            if (iterationMenu == null) {
-                $(".site-menu-item").each(function () {
-                    if ($(this).hasClass("active")) {
-                        $(this).removeClass("active");
-                    }
-                });
-                iterationMenu = userData.currentMenu;
-
-                html = StringUtils.format("<li class='breadcrumb-item active'>{0}{1}</li>",
-                    [!StringUtils.isEmpty(iterationMenu.iconClass) ?
-                        StringUtils.format("<i class='site-menu-icon fa {0}' aria-hidden=\"true\"></i> ", [iterationMenu.iconClass]) : "", iterationMenu.menuTitle]);
-            }
-            else {
-                html = StringUtils.format("<li class='breadcrumb-item'>{0}{1}</li>", [!StringUtils.isEmpty(iterationMenu.iconClass) ? StringUtils.format("<i class='{0}' aria-hidden=\"true\"></i> ", [iterationMenu.iconClass]) : "", iterationMenu.menuTitle]);
-            }
-            if (iterationMenu != null) {
-                $("#" + iterationMenu.menuId).closest("li").addClass("active");
-                if (iterationMenu.parentMenuId) {
-                    userData.menuList.forEach((menu: MenuEntity) => {
-                        if (menu.menuId == iterationMenu.parentMenuId) {
-                            html = this.setMenuActive(menu, userData) + html;
-                            return false;
-                        }
-                    })
-                }
-            }
-            return html;
-        }
-
-
 
         /**
          * 迭代方式生成目录

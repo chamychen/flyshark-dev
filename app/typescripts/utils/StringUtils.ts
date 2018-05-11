@@ -8,7 +8,7 @@ namespace flyshark.utils {
          * @returns 
          * @memberof StringUtils
          */
-        public static xssFilterString(str: string) {
+        static xssFilterString(str: string) {
             if (!StringUtils.isEmpty(str)) {
                 str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 return str;
@@ -24,7 +24,7 @@ namespace flyshark.utils {
          * @returns {*} 
          * @memberof StringUtils
          */
-        public static xssFilterObject(obj: any): any {
+        static xssFilterObject(obj: any): any {
             if (!obj) {
                 return null;
             }
@@ -42,7 +42,7 @@ namespace flyshark.utils {
          * @returns {boolean} 
          * @memberof StringUtils
          */
-        public static isEmpty(str: string): boolean {
+        static isEmpty(str: string): boolean {
             if (!str) {
                 return true;
             }
@@ -60,7 +60,7 @@ namespace flyshark.utils {
          * @returns {string} 
          * @memberof StringUtils
          */
-        public static trim(str: string): string {
+        static trim(str: string): string {
             if (!str) {
                 return str;
             }
@@ -78,7 +78,7 @@ namespace flyshark.utils {
          * @returns {*} 
          * @memberof StringUtils
          */
-        public static toJsonObject(str: string): any {
+        static toJsonObject(str: string): any {
             if (StringUtils.isEmpty(str)) {
                 return null;
             }
@@ -96,7 +96,7 @@ namespace flyshark.utils {
          * @returns {String} 
          * @memberof StringUtils
          */
-        public static toJsonString(obj: any): string {
+        static toJsonString(obj: any): string {
             var str = StringUtils.xssFilterString(JSON.stringify(obj));
             return str;
         }
@@ -108,7 +108,7 @@ namespace flyshark.utils {
          * @returns {String} 
          * @memberof StringUtils
          */
-        public static newId(): String {
+        static newId(): string {
             function S4() {
                 return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
             }
@@ -124,7 +124,7 @@ namespace flyshark.utils {
          * @returns {string} 
          * @memberof StringUtils
          */
-        public static format(str: string, args: Array<any>): string {
+        static format(str: string, ...args: Array<any>): string {
             if (!args || args.length == 0) {
                 return null;
             }
@@ -135,6 +135,20 @@ namespace flyshark.utils {
                 }
                 return str;
             }
+        }
+
+        /**
+         * 将对象的属性转换成html元素的属性
+         * @param obj 
+         */
+        static objectToHtmlAttribute(obj: any): string {
+            var attributesHtml = "";
+            if (obj) {
+                for (let key in obj) {
+                    attributesHtml += StringUtils.format(' {0}="{1}" ', key, obj[key]);
+                }
+            }
+            return attributesHtml;
         }
     }
 }

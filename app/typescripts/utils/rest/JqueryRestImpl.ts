@@ -1,3 +1,4 @@
+///<reference path="../../dts/jquery.d.ts" />
 ///<reference path="RestMethod.ts" />
 ///<reference path="Rest.ts" />
 

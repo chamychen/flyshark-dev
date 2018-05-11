@@ -1,9 +1,8 @@
 ///<reference path="../../entity/MenuEntity.ts" />
-///<reference path="../../entity/UserDataEntity.ts" />
 
-namespace flyshark.utils.menu {
+
+namespace flyshark.service.menu {
     import MenuEntity = flyshark.entity.MenuEntity;
-    import UserDataEntity = flyshark.entity.UserDataEntity;
 
     export interface Menu {
         /**
@@ -15,14 +14,5 @@ namespace flyshark.utils.menu {
          * @memberof Menu
          */
         createMenu(menuList: Array<MenuEntity>, menuHtmlElement: HTMLElement): void;
-
-        /**
-         * 跳转到目录
-         * 
-         * @param {string} menuId 
-         * @param {*} userData 
-         * @memberof Menu
-         */
-        toMenu(menuId: string, userData: UserDataEntity): void;
     }
 }

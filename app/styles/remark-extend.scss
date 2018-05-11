@@ -1,0 +1,314 @@
+$hoverColor:#dcedff;//焦点色
+$selectColor:rgba(33,33,33,.05);//选中色
+
+body, .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6, .site-navbar .navbar-header .navbar-brand {
+    font-family: "Microsoft YaHei,Roboto,sans-serif";
+}
+
+body
+{
+    background: #f1f4f5;
+    overflow: hidden;
+}
+
+.mini-screen .panel-actions{
+    padding: 0px;
+    padding-left: 10px;
+}
+
+.site-skintools{
+    width: 250px;
+    right: -250px;
+}
+
+.site-skintools .tab-content > .tab-pane{
+    max-height: 320px;
+    overflow:auto;
+}
+
+.page-content
+{
+    padding:10px;
+}
+
+.page-content-panel
+{
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.page-header
+{
+    padding: 0px;
+    padding-top: 0px;
+    padding-bottom: 15px;
+    font-size: 16px;
+}
+
+.panel-title {
+    display: inline-block;
+    padding: 0px;
+}
+.panel-action{
+   float: right;
+}
+
+.page-seach-area
+{
+    display: none;
+}
+
+.clear{
+    clear: both;
+}
+
+.ui-jqgrid
+{
+    border:none;
+}
+
+.grid-header{
+    border-bottom: 2px solid #087eff;
+    padding-bottom: 10px;
+    /* margin-bottom: 10px; */
+}
+
+.grid-header .panel-actions
+{
+    right: 10px;
+}
+
+button{
+    margin-right: 10px;
+}
+
+button.icon-btn{
+    margin-right: 6px;
+}
+
+.dynamic-props-int .col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto{
+    padding: 0px;
+}
+
+
+.form-material .form-control.focus~.floating-label, .form-material .form-control:focus~.floating-label, .form-material .form-control:not(.empty)~.floating-label{
+    top: -.9rem;
+    font-size: 0.9rem;
+    color: black;
+}
+
+select.form-control:not([size]):not([multiple])
+{
+    height: calc(2.25rem + 4.5px);
+}
+
+.form-material.floating{
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.dynamic-props-init
+{
+    margin-right: 0px; 
+    margin-left: 0px; 
+}
+
+.dynamic-prop-init{
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom:15px;
+    padding-right: 8px;
+}
+
+.dynamic-prop-title
+{
+    padding-right: 5px;
+}
+
+.form-material .input-group .form-control-wrap
+{
+    margin-right: 10px;
+    margin-left: 0px;
+}
+
+body.site-navbar-small {
+    padding-top: 40px;
+}
+
+.site-navbar-small .site-navbar {
+    height: 40px;
+    min-height: 40px;
+}
+
+.site-navbar-small .site-menubar,body.site-navbar-small .site-menubar {
+    top: 40px;
+    height: calc(100% - 40px);
+}
+
+body.site-navbar-small.mini-screen.site-navbar-collapse-show .site-menubar {
+    top: 90px;
+    height: calc(100% - 90px);
+}
+
+.mini-screen .navbar-inverse .navbar-toolbar .nav-link {
+    color:#827c7c;
+}
+
+
+body.site-navbar-small.mini-screen.site-navbar-collapse-show{
+    padding-top: 80px;
+}
+
+.site-navbar-small .site-navbar .navbar-toggler{
+    height: 40px;
+    padding: 5px;
+}
+
+.site-navbar-small .site-navbar .navbar-brand {
+    height: 40px;
+    padding: 10px 20px;
+}
+
+.site-navbar-small .site-navbar .navbar-toolbar > li > a {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.site-navbar-small .site-navbar .navbar-nav > li > a.navbar-avatar, .site-navbar-small .site-navbar .navbar-toolbar > li > a.navbar-avatar {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#toggleMenubar a {
+    padding-top: 8px;
+}
+
+.navbar-brand {
+    font-size: 16px;
+}
+
+.page-title {
+    font-size: 20px;
+}
+
+.mm-navbar .mm-prev:before, .site-menu-arrow:before {
+    content: "";
+    border-top: 1px solid rgba(246, 13, 13, 0);
+    border-left: 1px solid transparent;
+    box-sizing: content-box;
+    display: block;
+    width: 5px;
+    height: 5px;
+    position: absolute;
+    border-color: rgba(158, 158, 158, .9);
+    top: 20px;
+}
+
+.mm-navbar .mm-prev:before {
+    content: "";
+    left: 0px;
+    transform: rotate(315deg);
+}
+
+.site-menu-arrow:before {
+    right: 0px;
+    transform: rotate(135deg);
+}
+
+.breadcrumb-item{
+    color: #3f51b5;
+    font-weight: bold;
+}
+
+.breadcrumb-item.active {
+    color:black;
+}
+
+.container-fluid {
+    // padding-bottom: 10px;
+    cursor: pointer;
+}
+
+.table > tbody > tr.multi-rows-current > td, .table > tbody > tr.multi-rows-current > th, .table > tbody > tr > td.multi-rows-current, .table > tbody > tr > th.multi-rows-current, .table > tfoot > tr.multi-rows-current > td, .table > tfoot > tr.multi-rows-current > th, .table > tfoot > tr > td.multi-rows-current, .table > tfoot > tr > th.multi-rows-current, .table > thead > tr.multi-rows-current > td, .table > thead > tr.multi-rows-current > th, .table > thead > tr > td.multi-rows-current, .table > thead > tr > th.multi-rows-current {
+    background-color: rgba(248, 7, 7, 0.1);
+}
+
+
+
+.btn .icon{
+    font-weight: bold;
+}
+
+
+
+.tree-wrap {
+    top: 5px;
+}
+
+.cell-wrapper, .cell-wrapperleaf {
+    font-weight: bold;
+}
+
+.icon-btn-nobg.btn{
+    margin: 0px;
+    box-shadow: none;
+    background: none;
+}
+
+.icon-btn-nobg.btn .icon{
+    margin:0px;
+}
+
+.icon-btn-nobg:hover {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/*.jqgrow[editable='1'] .tree-wrap {*/
+/*display: none;*/
+/*}*/
+
+.search-control-icon
+{
+    transform:rotate(270deg)!important;
+    -ms-transform:rotate(270deg)!important; 	/* IE 9 */
+    -moz-transform:rotate(270deg)!important; 	/* Firefox */
+    -webkit-transform:rotate(270deg)!important; /* Safari 和 Chrome */
+    -o-transform:rotate(270deg)!important; 	/* Opera */
+}
+
+.ui-jqgrid-btable .btn-sm
+{
+    padding:0px;
+}
+
+.ui-jqgrid-btable .btn-sm
+{
+    margin-right: 5px;
+}
+
+.table tfoot th,.table thead th{
+    color:black;
+}
+
+.jqgrow:hover,.jqgrow:focus,.ui-jqgrid tr.jqgrow.active{
+    background-color:$hoverColor;
+}
+
+.jqgrow.success,.jqgrow.success:hover{
+    background-color:$selectColor;
+}
+
+.icon-btn{
+    padding: 0px;
+
+}
+
+.btn .icon {
+    width: 1em;
+    margin: -1px 3px 0;
+    line-height: inherit;
+    text-align: center;
+    font-weight: bold;
+}

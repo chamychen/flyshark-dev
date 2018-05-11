@@ -1,13 +1,20 @@
-///<reference path="../entity/SystemBaseInfoEntity.ts" />
-///<reference path="../entity/UserInfoEntity.ts" />
-///<reference path="../entity/MenuEntity.ts" />
+///<reference path="../../entity/SystemBaseInfoEntity.ts" />
+///<reference path="../../entity/UserInfoEntity.ts" />
+///<reference path="../../entity/MenuEntity.ts" />
 
-namespace flyshark.service {
+namespace flyshark.service.system {
     import SystemBaseInfoEntity = flyshark.entity.SystemBaseInfoEntity;
     import UserInfoEntity = flyshark.entity.UserInfoEntity;
     import MenuEntity = flyshark.entity.MenuEntity;
 
     export interface SystemService {
+        /**
+         * 当前目录
+         * 
+         * @type {MenuEntity}
+         * @memberof SystemService
+         */
+        currentMenu: MenuEntity;
         /**
          * 获取系统基本信息
          */
