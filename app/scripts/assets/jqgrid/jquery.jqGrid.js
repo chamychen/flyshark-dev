@@ -6357,12 +6357,16 @@
                             if (this.hidden === false && !this.fixed) {
                                 cw = this.widthOrg;
                                 cw = Math.round(aw * cw / ($t.p.tblwidth - brd * vc - gw));
-                                if (cw < 0) {
-                                    return;
+                                // if (cw < 0) {
+                                //     return;
+                                // }
+                                if (cw < this.minWidth) {
+                                    cw = this.minWidth;
                                 }
+                                $t.grid.headers[i].width = cw;
                                 this.width = cw;
                                 initwidth += cw;
-                                $t.grid.headers[i].width = cw;
+
                                 $t.grid.headers[i].el.style.width = cw + "px";
                                 if ($t.p.footerrow) {
                                     $t.grid.footers[i].style.width = cw + "px";
@@ -6791,8 +6795,11 @@
                         r,
                         mind,
                         expanded = $t.p.treeReader.expanded_field;
-                    //check for arrow keys
+                    //check for arrow keys                    
                     if (target) {
+                        var isMultiSelect = $($t).getN("multiselect");
+                        var editMode = $($t).getN("editMode");
+                        var multiboxonly = $($t).getN("multiboxonly");
                         var previd = $t.p.selrow;
                         mind = $t.p._index[$.jgrid.stripPref($t.p.idPrefix, target.id)];
                         if (event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40) {
@@ -6813,7 +6820,23 @@
                                         id = r.id;
                                     }
                                 }
-                                $($t).jqGrid('setSelection', id, true, event);
+                                if (!id) {//chamy add
+                                    return;
+                                }
+                                $('tr[tabindex=0]').attr("tabindex",-1);
+                                $('#' + id).attr("tabindex", 0);
+                                //选中行
+                                if ((!multiboxonly && isMultiSelect) || !isMultiSelect) {
+                                    $(this).setSelection(rowid);
+                                }
+                                //打开编缉模式
+                                if (editMode == 2) {
+                                    $(this).batchEditExit();
+                                }
+                                if (editMode == 2 || editMode == 3) {
+                                    $(this).editRow(id, false);
+                                }
+                                // $($t).jqGrid('setSelection', id, true, event);
                                 $($t).triggerHandler("jqGridKeyUp", [id, previd, event]);
                                 if ($.isFunction(o.onUpKey)) {
                                     o.onUpKey.call($t, id, previd, event);
@@ -6837,7 +6860,24 @@
                                         id = r.id;
                                     }
                                 }
-                                $($t).jqGrid('setSelection', id, true, event);
+                                if (!id) {//chamy add
+                                    return;
+                                }
+                               
+                                $('tr[tabindex=0]').attr("tabindex",-1);
+                                $('#' + id).attr("tabindex", 0);
+                                //选中行
+                                if ((!multiboxonly && isMultiSelect) || !isMultiSelect) {
+                                    $(this).setSelection(rowid);
+                                }
+                                //打开编缉模式
+                                if (editMode == 2) {
+                                    $(this).batchEditExit();
+                                }
+                                if (editMode == 2 || editMode == 3) {
+                                    $(this).editRow(id, false);
+                                }
+                                // $($t).jqGrid('setSelection', id, true, event);
                                 $($t).triggerHandler("jqGridKeyDown", [id, previd, event]);
                                 if ($.isFunction(o.onDownKey)) {
                                     o.onDownKey.call($t, id, previd, event);
@@ -6890,6 +6930,8 @@
                             currentRowId = $("#" + targetId).closest(".jqgrow").attr("id");
                         }
                         if (currentRowId) {
+                            $('tr[tabindex=0]').attr("tabindex",-1);
+                            $("#"+currentRowId).attr("tabindex",0);
                             //是否被选中
                             var isSelected = $("#" + currentRowId).attr("aria-selected") == "true" ? true : false;
                             var isMultiSelect = $($t).getN("multiselect");
@@ -18364,17 +18406,17 @@
                 if ($.isFunction($t.p.afterSetTreeNode)) {
                     $t.p.afterSetTreeNode.call($t, index, len);
                 }
-                
-                $($t.p.colModel).each(function(){
-                    var cmName=this.name;
-                    if(cmName==$t.p.ExpandColumn){
-                        var minWidth=this.minWidth;
+
+                $($t.p.colModel).each(function () {
+                    var cmName = this.name;
+                    if (cmName == $t.p.ExpandColumn) {
+                        var minWidth = this.minWidth;
                         var newWidth = 35 * (maxLevel + 1);
-                        $($t).jqGrid("setColWidthN", $t.p.ExpandColumn, newWidth <= minWidth ? minWidth : newWidth);  
+                        $($t).jqGrid("setColWidthN", $t.p.ExpandColumn, newWidth <= minWidth ? minWidth : newWidth);
                     }
                 });
-              
-               
+
+
             });
         },
         setTreeGrid: function () {

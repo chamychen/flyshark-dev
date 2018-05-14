@@ -54,6 +54,8 @@ namespace flyshark.utils.grid.handler {
                 $(this).batchEditExit();
             }
             $(this).editRow(rowid, false);
+            $('tr[tabindex=0]').attr("tabindex",-1);
+            $('#' + rowid).attr("tabindex", 0);
         }
 
         /**
