@@ -449,6 +449,7 @@ interface JQueryJqGridStatic {
     htmlDecode(value: string): string;
     info_dialog(caption: any, content: any, c_b: any, modalopt: any): void;
     getRegional(inst: any, param: any, def_val: any): any;
+
 }
 
 interface JQueryStatic {

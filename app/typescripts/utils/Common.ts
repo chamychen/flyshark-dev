@@ -7,7 +7,7 @@ namespace flyshark.utils {
          * 获取当前工作区高度
          * @returns {number}
          */
-         static getWorkSpaceHeight(): number {
+        static getWorkSpaceHeight(): number {
             Common.setScreenClass();
             let totalHeight = document.documentElement.clientHeight;
             let headerHeight1 = $(".site-navbar .navbar-container:visible").outerHeight() | $(".site-navbar").outerHeight();//页面顶部总高度
@@ -35,7 +35,7 @@ namespace flyshark.utils {
         /**
          * 识别屏幕大小
          */
-         static setScreenClass() {
+        static setScreenClass() {
             let width = document.documentElement.clientWidth;
             if (width <= 767) {
                 if (!$("body").hasClass("mini-screent")) {
@@ -51,7 +51,7 @@ namespace flyshark.utils {
          *弹出错误消息
         * @param message
         */
-         static alertError(message: string) {
+        static alertError(message: string) {
             alertify.error("<i class='icon fa-window-close' style='margin-right:5px;'></i>" + message);
         }
 
@@ -59,7 +59,7 @@ namespace flyshark.utils {
          *弹出警告消息
          * @param message
          */
-         static alertWarn(message: string) {
+        static alertWarn(message: string) {
             alertify.error("<i class='icon fa-warning' style='color:#F4FF81;margin-right:5px;'></i>" + message);
         }
 
@@ -67,7 +67,7 @@ namespace flyshark.utils {
          *弹出成功消息
          * @param message
          */
-         static alertOk(message: string) {
+        static alertOk(message: string) {
             alertify.success("<i class='icon fa-check-circle' style='margin-right:5px;'></i>" + message);
         }
         /**
@@ -78,14 +78,14 @@ namespace flyshark.utils {
          * @param {any} defaultValue 
          * @param {any} success 
          */
-         static alertInput(title: string, msg: string, defaultValue: string, success: (evt: any, value: string) => void): any {
+        static alertInput(title: string, msg: string, defaultValue: string, success: (evt: any, value: string) => void): any {
             return alertify.prompt(title, msg, defaultValue, function (evt, value) {
                 success(evt, value);
             }, null);
         }
 
 
-         static alertConfirm(msg: string, success: () => void = null, cssClass: string = null) {
+        static alertConfirm(msg: string, success: () => void = null, cssClass: string = null) {
             alertify.confirm(msg, success, cssClass);
         }
 
@@ -94,7 +94,7 @@ namespace flyshark.utils {
          * 
          * @param e 组织冒泡
          */
-         static stopBubble(e: any) {
+        static stopBubble(e: any) {
             //如果提供了事件对象，则这是一个非IE浏览器 
             if (e && e.stopPropagation)
                 //因此它支持W3C的stopPropagation()方法 
@@ -102,6 +102,45 @@ namespace flyshark.utils {
             else
                 //否则，我们需要使用IE的方式来取消事件冒泡 
                 window.event.cancelBubble = true;
+        }
+
+
+        /**
+         * 返回提示的通用配置
+         * 
+         * @static
+         * @returns 
+         * @memberof Common
+         */
+        static getToolTipSettings() {
+            // placement:'auto',//值: auto,top,right,bottom,left,top-right,top-left,bottom-right,bottom-left
+            // width:'auto',//可以设置数字
+            // height:'auto',//可以设置数字
+            // trigger:'click',//值:click,hover
+            // style:'',//值:'',inverse
+            // delay:300,//延迟时间, 悬浮属性才执行
+            // cache:true,//如果缓存设置为false,将重建
+            // multi:false,//在页面允许其他弹出层
+            // arrow:true,//是否显示箭头
+            // title:'',//标题,如果标题设置为空字符串时,标题栏会自动隐藏
+            // content:'',//内容,内容可以是函数
+            // closeable:false,//显示关闭按钮
+            // padding:true,//内容填充
+            // type:'html',//内容类型, 值:'html','iframe','async'
+            // url:''//如果不是空的,插件将通过url加载内容
+            let settings: any = {
+                emptyIsHide: true,//当没有内容可显示时不弹出
+                trigger: 'hover',//click\hover
+                width: "auto",
+                height:'auto',//可以设置数字
+                multi: false,
+                closeable: false,
+                style: '',
+                delay: 300,
+                padding: true,
+                backdrop: false
+            };
+            return settings;
         }
     }
 

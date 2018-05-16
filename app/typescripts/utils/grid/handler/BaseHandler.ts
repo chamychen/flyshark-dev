@@ -1,12 +1,18 @@
 ///<reference path="../../StringUtils.ts" />
 ///<reference path="../enums/Direction.ts" />
+///<reference path="../enums/TreeColType.ts" />
+///<reference path="../model/DataDiff.ts" />
 ///<reference path="../model/ColModel.ts" />
+
 
 namespace flyshark.utils.grid.handler {
 
     import StringUtils = flyshark.utils.StringUtils;
+    import TreeColType = flyshark.utils.grid.enums.TreeColType;
     import Direction = flyshark.utils.grid.enums.Direction;
+    import DataDiff = flyshark.utils.grid.model.DataDiff;
     import ColModel = flyshark.utils.grid.model.ColModel;
+
 
     export class BaseHandler {
         /**
@@ -78,103 +84,111 @@ namespace flyshark.utils.grid.handler {
                             let cm: ColModel = colModel[i];
                             let cmName = cm.name;
                             //忽略树结构部分属性&完全不需要取值的列（如操作列）
-                            // || cmName == "treeLoaded" || cmName == "treeExpanded" || cmName == "treeIcon")
-                            if (cm.canGetValue == undefined && (cmName == 'cb' || cmName == 'subgrid' || cm.canGetValue == false)) {
-                                continue;
-                            }
-                            else {
-                                let isEditCell = false;//单元格是否为编缉状态
-                                if (isEditRow) {
-                                    if (cm.editable && !$(td).hasClass('not-editable-cell')) {
-                                        isEditCell = true;
-                                    }
-                                }
-                                if (isEditCell) {
-                                    let val = null;
-                                    let valText: string = null;
-                                    switch (cm.edittype) {
-                                        case "checkbox":
-                                            let cbv = ["1", "0"];
-                                            if (cm.editoptions && cm.editoptions.value) {
-                                                cbv = cm.editoptions.value.split(":");
-                                            }
-                                            val = $("input", td).is(":checked") ? cbv[0] : cbv[1];
-                                            break;
-                                        case 'text':
-                                        case 'password':
-                                        case 'textarea':
-                                        case "button":
-                                            val = $("input, textarea", td).val();
-                                            break;
-                                        case 'select':
-                                            if (!cm.editoptions.multiple) {
-                                                val = $("select option:selected", td).val();
-                                                valText = $("select option:selected", td).text();
-                                            }
-                                            else {
-                                                let sel = $("select", td), selectedVal: any;
-                                                selectedVal = $(sel).val();
-                                                if (selectedVal) {
-                                                    val = selectedVal.join(",");
-                                                    let selectedText: string[] = [];
-                                                    $("select option:selected", this).each(function (i, selected) {
-                                                        selectedText[i] = $(selected).text();
-                                                    });
-                                                    valText = selectedText.join(",");
-                                                }
-                                            }
-                                            break;
-                                        case 'custom':
-                                            try {
-                                                if (cm.editoptions && $.isFunction(cm.editoptions.custom_value)) {
-                                                    val = cm.editoptions.custom_value.call($(grid), $(".customelement", td), 'get');
-                                                    if (data[cmName] === undefined) {
-                                                        throw "e2";
-                                                    }
-                                                }
-                                                else {
-                                                    throw "e1";
-                                                }
-                                            } catch (e) {
-                                                if (e === "e1") {
-                                                    $.jgrid.info_dialog(errors.errcap, "function 'custom_value' " + edit.msg.nodefined, edit.bClose, {
-                                                        styleUI: $(grid).getN("styleUI")
-                                                    });
-                                                } else {
-                                                    $.jgrid.info_dialog(errors.errcap, e.message, edit.bClose, {
-                                                        styleUI: $(grid).getN("styleUI")
-                                                    });
-                                                }
-                                            }
-                                            break;
-                                    }
-                                    data[cmName] = $.jgrid.htmlDecode(val);
-                                    if (valText) {
-                                        data[cmName + '_' + 'text'] = $.jgrid.htmlDecode(valText);
-                                    }
+                            // || cmName == "treeLoaded" || cmName == "treeExpanded" || cmName == "treeIcon")                            
+                            // if (cm.canGetValue == undefined || !cm.canGetValue || cmName == 'cb' || cmName == 'subgrid') {
+                            //     continue;
+                            // }
+                            // else {
+                            if (cm.canGetValue) {
+                                if (cm.treeColType == TreeColType.SortField) {
+                                    let ids = $(this).getDataIDs();
+                                    let sortNo = ids.indexOf(rowId) + 1;
+                                    data[cmName] = sortNo;
                                 }
                                 else {
-                                    if (treeGrid && cmName == $(grid).getN("ExpandColumn")) {
-                                        let val = $.jgrid.htmlDecode($("span:first", td).html());
-                                        if (!val) {
-                                            data[cmName] = $.jgrid.htmlDecode($(td).html());
+                                    let isEditCell = false;//单元格是否为编缉状态
+                                    if (isEditRow) {
+                                        if (cm.editable && !$(td).hasClass('not-editable-cell')) {
+                                            isEditCell = true;
                                         }
-                                        else {
-                                            data[cmName] = val;
+                                    }
+                                    if (isEditCell) {
+                                        let val = null;
+                                        let valText: string = null;
+                                        switch (cm.edittype) {
+                                            case "checkbox":
+                                                let cbv = ["1", "0"];
+                                                if (cm.editoptions && cm.editoptions.value) {
+                                                    cbv = cm.editoptions.value.split(":");
+                                                }
+                                                val = $("input", td).is(":checked") ? cbv[0] : cbv[1];
+                                                break;
+                                            case 'text':
+                                            case 'password':
+                                            case 'textarea':
+                                            case "button":
+                                                val = $("input, textarea", td).val();
+                                                break;
+                                            case 'select':
+                                                if (!cm.editoptions.multiple) {
+                                                    val = $("select option:selected", td).val();
+                                                    valText = $("select option:selected", td).text();
+                                                }
+                                                else {
+                                                    let sel = $("select", td), selectedVal: any;
+                                                    selectedVal = $(sel).val();
+                                                    if (selectedVal) {
+                                                        val = selectedVal.join(",");
+                                                        let selectedText: string[] = [];
+                                                        $("select option:selected", this).each(function (i, selected) {
+                                                            selectedText[i] = $(selected).text();
+                                                        });
+                                                        valText = selectedText.join(",");
+                                                    }
+                                                }
+                                                break;
+                                            case 'custom':
+                                                try {
+                                                    if (cm.editoptions && $.isFunction(cm.editoptions.custom_value)) {
+                                                        val = cm.editoptions.custom_value.call($(grid), $(".customelement", td), 'get');
+                                                        if (data[cmName] === undefined) {
+                                                            throw "e2";
+                                                        }
+                                                    }
+                                                    else {
+                                                        throw "e1";
+                                                    }
+                                                } catch (e) {
+                                                    if (e === "e1") {
+                                                        $.jgrid.info_dialog(errors.errcap, "function 'custom_value' " + edit.msg.nodefined, edit.bClose, {
+                                                            styleUI: $(grid).getN("styleUI")
+                                                        });
+                                                    } else {
+                                                        $.jgrid.info_dialog(errors.errcap, e.message, edit.bClose, {
+                                                            styleUI: $(grid).getN("styleUI")
+                                                        });
+                                                    }
+                                                }
+                                                break;
+                                        }
+                                        data[cmName] = $.jgrid.htmlDecode(val);
+                                        if (valText) {
+                                            data[cmName + '_' + 'text'] = $.jgrid.htmlDecode(valText);
                                         }
                                     }
                                     else {
-                                        if (cm.formatter) {
-                                            try {
-                                                data[cmName] = $(grid).unformat(td, { rowId: rowId, colModel: cm }, i, null);
-
-                                            }
-                                            catch (e) {
+                                        if (treeGrid && cmName == $(grid).getN("ExpandColumn")) {
+                                            let val = $.jgrid.htmlDecode($("span:first", td).html());
+                                            if (!val) {
                                                 data[cmName] = $.jgrid.htmlDecode($(td).html());
+                                            }
+                                            else {
+                                                data[cmName] = val;
                                             }
                                         }
                                         else {
-                                            data[cmName] = $.jgrid.htmlDecode($(td).html());
+                                            if (cm.formatter) {
+                                                try {
+                                                    data[cmName] = $(grid).unformat(td, { rowId: rowId, colModel: cm }, i, null);
+
+                                                }
+                                                catch (e) {
+                                                    data[cmName] = $.jgrid.htmlDecode($(td).html());
+                                                }
+                                            }
+                                            else {
+                                                data[cmName] = $.jgrid.htmlDecode($(td).html());
+                                            }
                                         }
                                     }
                                 }
@@ -405,6 +419,99 @@ namespace flyshark.utils.grid.handler {
                 $(this).setGridHeight(height);
             }
             $(this).resetScrollX();
+        }
+
+
+        /**
+         * 获取需要提交到服务器的数据
+         * 
+         * @memberof BaseHandler
+         */
+        getDataToSave() {
+            let dataDiff: DataDiff = $(this).getN("dataDiff");
+            if (dataDiff.addIds) {
+                dataDiff.addData = [];
+                dataDiff.addIds.forEach(id => {
+                    let rowData = $(this).getRealRowData(id);
+                    dataDiff.addData.push(rowData);
+                })
+            }
+            if (dataDiff.delIds) {
+                dataDiff.delData = [];
+                dataDiff.delIds.forEach(id => {
+                    let rowData = $(this).getRealRowData(id);
+                    dataDiff.delData.push(rowData);
+                })
+            }
+            if (dataDiff.updateIds) {
+                let colModel: ColModel[] = $(this).getN("colModel");
+                let oldData: any[] = $(this).getN("oldData");
+                let confirmUpdateIds: any[] = [];
+                if (!colModel) {
+                    throw new Error("Grid列配置不能为空！");
+                }
+                dataDiff.updateData = [];
+                dataDiff.updateIds.forEach(id => {
+                    let oldRowData: any = null;
+                    oldData.forEach(d => {
+                        if ($(this).getId(d) == id) {
+                            oldRowData = d;
+                            return false;
+                        }
+                    })
+                    if (!oldData) {
+                        throw new Error("未知异常！");
+                    }
+                    else {
+                        let rowData = $(this).getRealRowData(id);
+                        //对比新旧数据
+                        colModel.forEach(element => {
+                            if (element.canGetValue && !element.ignoreUpdate) {
+                                let cmName = element.name;
+                                if (oldRowData[cmName] == undefined || oldRowData[cmName] == "") {
+                                    oldRowData[cmName] = null;
+                                }
+                                if (rowData[cmName] == undefined || rowData[cmName] == "") {
+                                    rowData[cmName] = null;
+                                }
+                                if (oldRowData[cmName] != rowData[cmName]) {
+                                    confirmUpdateIds.push(id);
+                                    dataDiff.updateData.push(rowData);
+                                    return false;
+                                }
+                            }
+                        });
+                    }
+                })
+                dataDiff.updateIds = confirmUpdateIds;
+            }
+
+            let checkDatMethod: (gid: string, rowData: any) => string = $(this).getN("checkDataMethod");
+            if (checkDatMethod) {
+                //数据验证
+                let checkDataList: any[] = [];
+                if (dataDiff.addData) {
+                    checkDataList.concat(dataDiff.addData);
+                }
+                if (dataDiff.updateData) {
+                    checkDataList.concat(dataDiff.updateData);
+                }
+                if (checkDataList) {
+                    let msgList: string[] = [];
+                    let onlyCheckSingleRow: boolean = $(this).getN("onlyCheckSingleRow");
+                    checkDataList.forEach(d => {
+                        let msg: string = checkDatMethod($(this).attr("id"), d);
+                        if (!StringUtils.isEmpty(msg)) {
+                            msgList.push(msg);
+                            if (onlyCheckSingleRow) {
+                                return false;
+                            }
+                        }
+                    })
+                    dataDiff.errorMsgs = msgList;
+                }
+            }
+            return dataDiff;
         }
     }
 }

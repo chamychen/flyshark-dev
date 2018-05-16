@@ -15899,6 +15899,10 @@
                                 });
                         }
                         $($t).triggerHandler("jqGridInlineEditRow", [rowid, o]);
+                        //chamy add
+                        if ($.isFunction($t.p.afterEditRow)) {
+                            $t.p.afterEditRow.call($t, rowid);
+                        }
                         if ($.isFunction(o.oneditfunc)) {
                             o.oneditfunc.call($t, rowid);
                         }

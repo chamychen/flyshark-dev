@@ -20,6 +20,12 @@ namespace flyshark.utils.grid.enums {
         /**
          * 父子级关系列
          */
-        ParentField = "父级ID"
+        ParentField = "父级ID",
+
+
+        /**
+         *排序列 
+         */
+        SortField = "排序号"
     }
 }

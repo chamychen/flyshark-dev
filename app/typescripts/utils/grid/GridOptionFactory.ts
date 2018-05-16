@@ -5,7 +5,7 @@
 ///<reference path="enums/EditMode.ts" />
 
 namespace flyshark.utils.grid {
-    
+
     import TreeIcons = flyshark.utils.grid.model.TreeIcons;
     import TreeReader = flyshark.utils.grid.model.TreeReader;
     import ColModel = flyshark.utils.grid.model.ColModel;
@@ -21,12 +21,17 @@ namespace flyshark.utils.grid {
          * @param {string} id 
          * @param {ColModel[]} colModel 
          * @param {EditMode} [editMode=EditMode.OnlyView] 
+         * @param {string} rowTitleTemplate
          * @param {string} [url] 
          * @returns {GridOption} 
          * @memberof GridOption
          */
-        static createDefaultGridOption(id: string, colModel: ColModel[], editMode: EditMode = EditMode.OnlyView, url?: string): GridOption {
+        static createDefaultGridOption(id: string, colModel: ColModel[], editMode: EditMode = EditMode.OnlyView, rowTitleTemplate?: string, url?: string): GridOption {
+            if (StringUtils.isEmpty(rowTitleTemplate) && (editMode == EditMode.SingleRowEdit || editMode == EditMode.MultiRowEdit)) {
+                throw new Error("编缉模式下rowTitleTemplate不能为空！");
+            }
             let gridOption = new GridOption(id, colModel, editMode, url);
+            gridOption.rowTitleTemplate = rowTitleTemplate;
             return gridOption;
         }
 
@@ -37,12 +42,17 @@ namespace flyshark.utils.grid {
          * @param {string} id 
          * @param {ColModel[]} colModel 
          * @param {EditMode} [editMode=EditMode.OnlyView] 
+         * @param {string} rowTitleTemplate
          * @param {string} [url] 
          * @returns {GridOption} 
          * @memberof GridOption
          */
-        static createTreeGridOption(id: string, colModel: ColModel[], editMode: EditMode = EditMode.OnlyView, url?: string): GridOption {
+        static createTreeGridOption(id: string, colModel: ColModel[], editMode: EditMode = EditMode.OnlyView, rowTitleTemplate?: string, url?: string): GridOption {
+            if (StringUtils.isEmpty(rowTitleTemplate) && (editMode == EditMode.SingleRowEdit || editMode == EditMode.MultiRowEdit)) {
+                throw new Error("编缉模式下rowTitleTemplate不能为空！");
+            }
             let gridOption = new GridOption(id, colModel, editMode, url);
+            gridOption.rowTitleTemplate = rowTitleTemplate;
             gridOption.treeGrid = true;
             gridOption.ExpandColClick = true;
             gridOption.treeGridModel = "adjacency";

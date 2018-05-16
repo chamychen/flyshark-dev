@@ -1,3 +1,4 @@
+///<reference path="../../../dts/common.d.ts" />
 ///<reference path="../../../dts/jquery.d.ts" />
 ///<reference path="../../../dts/jqgrid.d.ts" />
 ///<reference path="../../Common.ts" />
@@ -26,6 +27,20 @@ namespace flyshark.utils.grid.model {
     import ColModelFactory = flyshark.utils.grid.ColModelFactory;
 
     export class GridOption {
+
+        /**
+         * 工具栏按钮模板ID
+         */
+        private buttonToolBarTempId = "grid-btn-toolbar";
+
+        /**
+         * 提示模板ID
+         * 
+         * @private
+         * @memberof GridOption
+         */
+        private tooltipTempId = "grid-tooltip";
+
         /**
          * 加载原始数据
          * 
@@ -33,6 +48,14 @@ namespace flyshark.utils.grid.model {
          * @memberof GridOption
          */
         oldData: any[];
+
+        /**
+         * 组成行标题的模板
+         * 
+         * @type {string[]}
+         * @memberof GridOption
+         */
+        rowTitleTemplate: string;
 
         /**
          * 表格数据增、删、改记录
@@ -224,6 +247,22 @@ namespace flyshark.utils.grid.model {
          */
         treeReader: TreeReader;
 
+        /**
+         * 单行数据异常则停止检查
+         * 
+         * @type {boolean}
+         * @memberof GridOption
+         */
+        onlyCheckSingleRow: boolean = false;
+
+        /**
+         * 检查数据的方法
+         * 
+         * @memberof GridOption
+         */
+        checkDataMethod: (gid: string, rowData: any) => string;
+
+
 
         /**
          * 单元格编缉的过滤方法
@@ -233,11 +272,113 @@ namespace flyshark.utils.grid.model {
         filterCellEditMethod: (rowData: any) => { rowId: string, cellNames: string[] };
 
         /**
+         * 自定义行插入后事件
+         * 
+         * @memberof GridOption
+         */
+        afterInsertRowCustomMethod: (rowid: string, rowdata: any, rowelem: any) => {};
+
+        /**
+         * 行插入后事件
+         * 
+         * @private
+         * @param {string} rowid 
+         * @param {*} rowdata 
+         * @param {*} rowelem 
+         * @memberof GridOption
+         */
+        private afterInsertRow(rowid: string, rowdata: any, rowelem: any) {
+            let customMethod = $(this).getN('afterInsertRowCustomMethod');
+            if (customMethod) {
+                customMethod(this);
+            }
+        }
+
+        /**
+         * 自定义行打开编缉后事件
+         * 
+         * @memberof GridOption
+         */
+        afterEditRowCustomMethod: (rowid: string) => {};
+
+        /**
+         * 行打开编缉后事件
+         * 
+         * @private
+         * @param {JQuery<HTMLElement>} grid 
+         * @param {string} rowid 
+         * @memberof GridOption
+         */
+        private afterEditRow(rowid: string) {
+            let grid = $(this);
+            let customMethod = $(grid).getN('afterEditRowCustomMethod');
+            if (customMethod) {
+                customMethod.call(grid, rowid);
+            }
+
+            let controls = $("#" + rowid).find(".form-control");
+            controls.off("change");
+            let settings = Common.getToolTipSettings();
+            //值改变后更新数据缓存
+            controls.on("change", function () {
+                let dataDiff: DataDiff = $(grid).getN("dataDiff");
+                if (!dataDiff.addIds.indexOf(rowid) && !dataDiff.updateIds.indexOf(rowid)) {
+                    dataDiff.updateIds.push(rowid);
+                }
+            })
+            // //值改变后更新数据缓存
+            controls.on("input", function () {
+                let val = StringUtils.trim($(this).val().toString());
+                if (val && val.length > 0) {
+                    $(this).attr("title", val);
+                }
+            })
+            //值改变后更新数据缓存
+            controls.on("propertyChange", function () {
+                let val = StringUtils.trim($(this).val().toString());
+                if (val && val.length > 0) {
+                    $(this).attr("title", val);
+                }
+            })
+
+            // //toolTip提示
+            // controls.each(function () {
+            //     settings.width = $(this).outerWidth();
+            //     $(this).webuiPopover(settings);
+            // })
+            // //值改变后更新数据缓存
+            // controls.on("input", function () {
+            //     let val = StringUtils.trim($(this).val().toString());
+            //     WebuiPopovers.updateContent(this, val);
+            //     WebuiPopovers.show(this);
+            // })
+            // //值改变后更新数据缓存
+            // controls.on("propertyChange", function () {
+            //     let val = StringUtils.trim($(this).val().toString());
+            //     WebuiPopovers.updateContent(this, val);
+            //     WebuiPopovers.show(this);
+            // })
+
+        }
+
+
+        /**
+         * 自定义gridComplete事件
+         * 
+         * @memberof GridOption
+         */
+        gridCompleteCustomMethod: (grid: JQuery<HTMLElement>) => {};
+        /**
          * 当表格所有数据都加载完成而且其他的处理也都完成时触发此事件，排序，翻页同样也会触发此事件
          * 
          * @memberof GridOption
          */
-        gridComplete: () => void;
+        private gridComplete() {
+            let customMethod = $(this).getN('gridCompleteCustomMethod');
+            if (customMethod) {
+                customMethod(this);
+            }
+        }
 
 
         constructor(id: string, colModel: ColModel[], editMode: EditMode = EditMode.OnlyView, url?: string) {
@@ -269,6 +410,8 @@ namespace flyshark.utils.grid.model {
             this.dataDiff.addIds = [];
             this.dataDiff.updateIds = [];
             this.dataDiff.delIds = [];
+            this.dataDiff.addData = [];
+            this.dataDiff.updateData = [];
             this.oldData = null;
         }
 
@@ -388,6 +531,32 @@ namespace flyshark.utils.grid.model {
         }
 
         /**
+         * 设置数据验证方法
+         * 
+         * @param {(rowData: any, allData: any[]) => string} checkDataMethod 
+         * @param {boolean} [onlyCheckSingleRow=false] 
+         * @memberof GridOption
+         */
+        setCheckMethod(checkDataMethod: (gid: string, rowData: any) => string, onlyCheckSingleRow: boolean = false) {
+            this.checkDataMethod = checkDataMethod;
+            this.onlyCheckSingleRow = onlyCheckSingleRow;
+        }
+
+        /**
+         * 设置内容提示
+         * 
+         * @private
+         * @memberof GridOption
+         */
+        private setBtnToolBarTemplate() {
+            let element = $("#" + this.buttonToolBarTempId);
+            if (element.length == 0) {
+                $("body").append('<div id="grid-tooltips" class="hidden"></div>');
+            }
+        }
+
+
+        /**
          * 渲染
          * 
          * @memberof GridOption
@@ -397,6 +566,7 @@ namespace flyshark.utils.grid.model {
             this.resetDataDiff();
             this.optimizeColModel();
             this.setSearchExtendBtn();
+            this.setBtnToolBarTemplate();
             grid.jqGrid(this);
             grid.jqGrid('bindKeys'); //支持键盘       
             this.renderGridBtn(); //渲染按钮 

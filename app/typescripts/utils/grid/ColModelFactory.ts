@@ -71,6 +71,9 @@ namespace flyshark.utils.grid {
                     colModel.hidden = true;
                     colModel.fixed = true;
                     break;
+                case TreeColType.SortField:
+                    colModel.hidden = true;
+                    colModel.fixed = true;
             }
             colModel.minWidth = colModel.width;
             return colModel;

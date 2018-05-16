@@ -22,6 +22,14 @@ namespace flyshark.utils.grid.model {
         canGetValue: boolean = true;
 
         /**
+         * 当前字段是否忽略更新对比（忽略更新，在检查是否更新行时自动忽略）
+         * 
+         * @type {boolean}
+         * @memberof ColModel
+         */
+        ignoreUpdate: boolean = false;
+
+        /**
          * 表格列的名称，所有关键字，保留字都不能作为名称使用包括subgrid, cb and rn
          * 
          * @type {string}
@@ -193,6 +201,24 @@ namespace flyshark.utils.grid.model {
             this.fixed = fixed;
             this.formatter = formatter;
         }
+
+        /**
+         * 
+         * 
+         * @param {boolean} required 
+         * @param {boolean} multiple 
+         * @param {*} options 用于select,checkbox的可选项,如{value:'0:待定;1:男;2:女'}
+         * @param {*} [defaultValue] 
+         * @memberof ColModel
+         */
+        setSelectEdit(required: boolean, multiple: boolean, options: any, defaultValue?: any) {
+            this.edittype = EditType.select;
+            this.editoptions.multiple = multiple;
+            this.editoptions.defaultValue = defaultValue;
+            this.editoptions.value = options;
+            this.editrules.required = required;
+        }
+
 
         setTextEdit(required: boolean, maxLength: number) {
             this.edittype = EditType.text;

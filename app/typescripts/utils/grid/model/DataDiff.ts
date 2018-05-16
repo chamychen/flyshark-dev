@@ -32,5 +32,37 @@ namespace flyshark.utils.grid.model {
          * @memberof DataDiff
          */
         delIds: string[];
+
+        /**
+         * 新增的具体数据
+         * 
+         * @type {any[]}
+         * @memberof DataDiff
+         */
+        addData: any[];
+
+        /**
+         * 修改的具体数据
+         * 
+         * @type {any[]}
+         * @memberof DataDiff
+         */
+        updateData: any[];
+
+        /**
+         * 删除的具体数据
+         * 
+         * @type {any[]}
+         * @memberof DataDiff
+         */
+        delData: any[];
+
+        /**
+         * 错误信息
+         * 
+         * @type {any[]}
+         * @memberof DataDiff
+         */
+        errorMsgs: any[];
     }
 }
