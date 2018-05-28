@@ -6823,7 +6823,7 @@
                                 if (!id) {//chamy add
                                     return;
                                 }
-                                $('tr[tabindex=0]').attr("tabindex",-1);
+                                $('tr[tabindex=0]').attr("tabindex", -1);
                                 $('#' + id).attr("tabindex", 0);
                                 //选中行
                                 if ((!multiboxonly && isMultiSelect) || !isMultiSelect) {
@@ -6863,8 +6863,8 @@
                                 if (!id) {//chamy add
                                     return;
                                 }
-                               
-                                $('tr[tabindex=0]').attr("tabindex",-1);
+
+                                $('tr[tabindex=0]').attr("tabindex", -1);
                                 $('#' + id).attr("tabindex", 0);
                                 //选中行
                                 if ((!multiboxonly && isMultiSelect) || !isMultiSelect) {
@@ -6930,8 +6930,8 @@
                             currentRowId = $("#" + targetId).closest(".jqgrow").attr("id");
                         }
                         if (currentRowId) {
-                            $('tr[tabindex=0]').attr("tabindex",-1);
-                            $("#"+currentRowId).attr("tabindex",0);
+                            $('tr[tabindex=0]').attr("tabindex", -1);
+                            $("#" + currentRowId).attr("tabindex", 0);
                             //是否被选中
                             var isSelected = $("#" + currentRowId).attr("aria-selected") == "true" ? true : false;
                             var isMultiSelect = $($t).getN("multiselect");
@@ -15984,84 +15984,19 @@
                 $('td[role="gridcell"]', ind).each(function (i) {
                     cm = $t.p.colModel[i];
                     nm = cm.name;
-                    elem = "";
-                    if (nm !== 'cb' && nm !== 'subgrid' && cm.editable === true && nm !== 'rn' && !$(this).hasClass('not-editable-cell')) {
-                        switch (cm.edittype) {
-                            case "checkbox":
-                                var cbv = ["Yes", "No"];
-                                if (cm.editoptions && cm.editoptions.value) {
-                                    cbv = cm.editoptions.value.split(":");
-                                }
-                                tmp[nm] = $("input", this).is(":checked") ? cbv[0] : cbv[1];
-                                elem = $("input", this);
-                                break;
-                            case 'text':
-                            case 'password':
-                            case 'textarea':
-                            case "button":
-                                // case "url":
-                                // case "number":
-                                // case "email":
-                                // case "date":
-                                // case "time":
-                                // case "month":
-                                // case "year":
-                                // case "week":
-                                // case "datetimelocal":
-                                tmp[nm] = $("input, textarea", this).val();
-                                elem = $("input, textarea", this);
-                                break;
-                            case 'select':
-                                if (!cm.editoptions.multiple) {
-                                    tmp[nm] = $("select option:selected", this).val();
-                                    tmp2[nm] = $("select option:selected", this).text();
-                                } else {
-                                    var sel = $("select", this),
-                                        selectedText = [];
-                                    tmp[nm] = $(sel).val();
-                                    if (tmp[nm]) {
-                                        tmp[nm] = tmp[nm].join(",");
-                                    } else {
-                                        tmp[nm] = "";
-                                    }
-                                    $("select option:selected", this).each(function (i, selected) {
-                                        selectedText[i] = $(selected).text();
-                                    });
-                                    tmp2[nm] = selectedText.join(",");
-                                }
-                                if (cm.formatter && cm.formatter === 'select') {
-                                    tmp2 = {};
-                                }
-                                elem = $("select", this);
-                                break;
-                            case 'custom':
-                                try {
-                                    if (cm.editoptions && $.isFunction(cm.editoptions.custom_value)) {
-                                        tmp[nm] = cm.editoptions.custom_value.call($t, $(".customelement", this), 'get');
-                                        if (tmp[nm] === undefined) {
-                                            throw "e2";
-                                        }
-                                    } else {
-                                        throw "e1";
-                                    }
-                                } catch (e) {
-                                    if (e === "e1") {
-                                        $.jgrid.info_dialog(errors.errcap, "function 'custom_value' " + edit.msg.nodefined, edit.bClose, {
-                                            styleUI: $t.p.styleUI
-                                        });
-                                    } else {
-                                        $.jgrid.info_dialog(errors.errcap, e.message, edit.bClose, {
-                                            styleUI: $t.p.styleUI
-                                        });
-                                    }
-                                }
-                                break;
+                    if (nm !== 'cb' && nm !== 'subgrid' && cm.editable === true && nm !== 'rn' && !$(this).hasClass('not-editable-cell')) {               
+                        let val = $($t).getEditCellValue(this, cm);
+                        elem = val.el;
+                        tmp[nm] = val.val;
+                        if(val.text){
+                            tmp2[nm] = val.text;
                         }
-                        cv = $.jgrid.checkValues.call($t, tmp[nm], i);
-                        if (cv[0] === false) {
-                            index = i;
-                            return false;
-                        }
+                        cv = [true];//不做数据校验
+                        // cv = $.jgrid.checkValues.call($t, tmp[nm], i);
+                        // if (cv[0] === false) {
+                        //     index = i;
+                        //     return false;
+                        // }
                         if ($t.p.autoencode) {
                             tmp[nm] = $.jgrid.htmlEncode(tmp[nm]);
                         }
@@ -18506,13 +18441,16 @@
                 }
                 $.each($t.p.treeReader,
                     function (j, n) {
+                        //chamy updates
+                        var treeReaderCfg = $t.p.treeReader;
                         if (n && $.inArray(n, dupcols) === -1) {
                             if (j === 'leaf_field') {
                                 $t.p._treeleafpos = i;
                             }
                             i++;
-                            $t.p.colNames.push(n);
-                            $t.p.colModel.push({
+                            var treeColModel = {
+                                canGetValue: true,
+                                ignoreUpdate: false,
                                 name: n,
                                 width: 1,
                                 hidden: true,
@@ -18522,7 +18460,14 @@
                                 //editable: true,
                                 editable: false,//chamy update
                                 search: false
-                            });
+                            };
+                            if (n == treeReaderCfg.sort_Controll_field) {
+                                treeColModel.canGetValue = false;
+                            }
+                            if (n == treeReaderCfg.sort_Controll_field || n == treeReaderCfg.sort_field || n == treeReaderCfg.leaf_field || n == treeReaderCfg.long_code_field || n == treeReaderCfg.expanded_field || n == treeReaderCfg.loaded || n == treeReaderCfg.icon_field) {
+                                treeColModel.ignoreUpdate = true;
+                            }
+                            $t.p.colModel.push(treeColModel);
                         }
                     });
             });

@@ -1,6 +1,11 @@
+///<reference path="../../dto/ResponseModel.ts" />
 ///<reference path="RestMethod.ts" />
 
+
 namespace flyshark.utils.rest {
+
+    import ResponseModel = flyshark.dto.ResponseModel;
+
     export interface Rest {
         /**
          * 请求
@@ -13,6 +18,6 @@ namespace flyshark.utils.rest {
          * @param {(xhr, status, error) => {}} [errorFunc] 异常处理方法
          * @memberof Rest
          */
-        query(methodType: RestMethod, url: string, data: object, isSync: boolean, successFunc?: (result, status, xhr) => {}, errorFunc?: (xhr, status, error) => {});
+        query<T>(methodType: RestMethod, url: string, data: object, isSync: boolean, successFunc?: (result: ResponseModel<T>, status: any, xhr: any) => void, errorFunc?: (xhr: any, status: any, error: any) => void): void;
     }
 }

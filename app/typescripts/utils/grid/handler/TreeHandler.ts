@@ -307,9 +307,9 @@ namespace flyshark.utils.grid.handler {
                                 if (match2 >= longCodeSuffix) {
                                     match2 = match2 + offsetValue;
                                     let newLongCode = match1 + match2.toString() + match3;
-                                    thisRowData[longCodeColumnName] = newLongCode;                                  
+                                    thisRowData[longCodeColumnName] = newLongCode;
                                     $(this).setRowData(id, thisRowData);
-  
+
                                 }
                             }
                         })
@@ -330,7 +330,8 @@ namespace flyshark.utils.grid.handler {
                 if (!rowId) {
                     throw new Error("新增节点ID不能为空！");
                 }
-                rowData.treeIsLeaf = true;
+                let leafFieldName = $(this).getTreeReader().leaf_field;
+                rowData[leafFieldName] = true;
                 rowData.treeLoaded = true;
                 rowData.treeExpanded = true;
                 let longCodeColumn = $(this).getTreeReader().long_code_field;
@@ -343,7 +344,7 @@ namespace flyshark.utils.grid.handler {
                 if (parent) {
                     parentId = $(this).getId(parent);
                     parentLongCode = parent[longCodeColumn];
-                    parent.treeIsLeaf = false;
+                    parent[leafFieldName] = false;
                     $(this).setRowData(parentId, parent, null);
                 }
 
@@ -465,7 +466,8 @@ namespace flyshark.utils.grid.handler {
                 if (parent) {
                     let childCount = $(this).getNodeChildCount(parent, true);
                     if (childCount == 0) {
-                        parent.treeIsLeaf = true;
+                        let leafFieldName = $(this).getTreeReader().leaf_field;
+                        parent[leafFieldName] = true;
                         $(this).setRowData($(this).getId(parent), parent, null);
                     }
                 }
@@ -593,6 +595,7 @@ namespace flyshark.utils.grid.handler {
                     var delData = $(this).delTreeNode(rowId);
                     if (delData) {
                         let prevDataId = "";
+                        let leafFieldName = $(this).getTreeReader().leaf_field;
                         let parentColoumnName = $(this).getTreeReader().parent_id_field;
                         let diffLevel = newLongCode.split('.').length - oldLongCode.split(".").length;
                         for (let i = 0; i < delData.length; i++) {
@@ -612,8 +615,9 @@ namespace flyshark.utils.grid.handler {
                                 }
                                 $(this).addTreeNode(d.rowD);
                                 if (delData.length > 1) {
-                                    d.rowD["treeIsLeaf"] = false;
+                                    d.rowD[leafFieldName] = false;
                                     $(this).setRowData(d.id, d.rowD, null);
+                                    newLongCode = d.rowD[longCodeColumnName];
                                 }
                             }
                             else {

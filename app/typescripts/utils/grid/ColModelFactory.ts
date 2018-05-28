@@ -64,6 +64,7 @@ namespace flyshark.utils.grid {
                     colModel.fixed = true;
                     break;
                 case TreeColType.LongCodeField:
+                    colModel.ignoreUpdate = true;
                     colModel.width = 120;
                     colModel.fixed = true;
                     break;
@@ -72,6 +73,11 @@ namespace flyshark.utils.grid {
                     colModel.fixed = true;
                     break;
                 case TreeColType.SortField:
+                    colModel.ignoreUpdate = true;
+                    colModel.hidden = true;
+                    colModel.fixed = true;
+                case TreeColType.LeafField:
+                    colModel.ignoreUpdate = true;
                     colModel.hidden = true;
                     colModel.fixed = true;
             }

@@ -1,8 +1,13 @@
 ///<reference path="../../dts/jquery.d.ts" />
+///<reference path="../../dto/ResponseModel.ts" />
 ///<reference path="RestMethod.ts" />
 ///<reference path="Rest.ts" />
 
+
 namespace flyshark.utils.rest {
+
+    import ResponseModel = flyshark.dto.ResponseModel;
+
     export class JqueryRestImpl implements Rest {
         /**
          * JQGURY发起Rest请求
@@ -15,7 +20,7 @@ namespace flyshark.utils.rest {
          * @param {(xhr, status, error) => {}} [errorFunc] 异常处理方法
          * @memberof Rest
          */
-        public query(methodType: RestMethod, url: string, data: object, isSync: boolean = false, successFunc?: (result, status, xhr) => {}, errorFunc?: (xhr, status, error) => {}) {
+        public query<T>(methodType: RestMethod, url: string, data: object, isSync: boolean, successFunc?: (result: ResponseModel<T>, status: any, xhr: any) => void, errorFunc?: (xhr: any, status: any, error: any) => void): void {
             let isAsync = isSync ? false : true;//是否异步
             $.ajax(url, {
                 async: isAsync,
@@ -25,6 +30,9 @@ namespace flyshark.utils.rest {
                 crossDomain: true,
                 success: function (result, status, xhr) {
                     if (successFunc) {
+                        if (result) {
+                            result = StringUtils.toJsonObject(result);
+                        }
                         successFunc(result, status, xhr);
                     }
                 },
@@ -35,6 +43,5 @@ namespace flyshark.utils.rest {
                 }
             });
         }
-
     }
 }

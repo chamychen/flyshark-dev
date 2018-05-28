@@ -26,6 +26,7 @@ namespace flyshark.service.system {
             systemBaseInfo.faviconUrl = "favicon.ico";
             systemBaseInfo.appleTouchIconUrl = "apple-touch-icon.png";
             systemBaseInfo.logoUrl = "/images/logo.png";
+            systemBaseInfo.serverUrl = "http://192.168.1.134:9090/flyshark-action";
             return systemBaseInfo;
         }
 
@@ -101,6 +102,17 @@ namespace flyshark.service.system {
             menuList.push(menu4);
             menuList.push(menu5);
             return menuList;
+        }
+
+        /**
+         * 获取服务器路径
+         * 
+         * @param {string} absoluteUrl 
+         * @returns {string} 
+         * @memberof SystemServiceImpl
+         */
+        getServerUrl(absoluteUrl: string): string {
+            return this.getSystemBaseInfo().serverUrl + absoluteUrl;
         }
     }
 }

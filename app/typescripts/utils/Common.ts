@@ -132,7 +132,7 @@ namespace flyshark.utils {
                 emptyIsHide: true,//当没有内容可显示时不弹出
                 trigger: 'hover',//click\hover
                 width: "auto",
-                height:'auto',//可以设置数字
+                height: 'auto',//可以设置数字
                 multi: false,
                 closeable: false,
                 style: '',
@@ -141,6 +141,23 @@ namespace flyshark.utils {
                 backdrop: false
             };
             return settings;
+        }
+
+        /**
+         * 设置控件的提示
+         * 
+         * @static
+         * @param {JQuery<HTMLElement>} control 
+         * @memberof Common
+         */
+        static setControlToolTip(control: JQuery<HTMLElement> | HTMLElement) {
+            let val = StringUtils.trim($(control).val().toString());
+            if (val && val.length > 0) {
+                $(control).attr("title", val);
+            }
+            else {
+                $(control).removeAttr("title");
+            }
         }
     }
 

@@ -31,6 +31,16 @@ namespace flyshark.service.system {
          * @returns {Array<MenuEntity>} 
          * @memberof SystemService
          */
-        getMyMenu(): Array<MenuEntity>
+        getMyMenu(): Array<MenuEntity>;
+
+
+        /**
+         * 获取服务器地址
+         * 
+         * @param {string} absoluteUrl 
+         * @returns {string} 
+         * @memberof SystemService
+         */
+        getServerUrl(absoluteUrl: string): string;
     }
 }

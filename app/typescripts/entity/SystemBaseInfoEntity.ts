@@ -8,5 +8,6 @@ namespace flyshark.entity {
         appleTouchIconUrl: string;
         faviconUrl: string;
         logoUrl: string;
+        serverUrl: string;
     }
 }

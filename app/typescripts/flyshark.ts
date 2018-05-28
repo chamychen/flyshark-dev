@@ -7,11 +7,15 @@
 ///<reference path="utils/grid/handler/BaseHandler.ts" />
 ///<reference path="utils/grid/handler/TreeHandler.ts" />
 ///<reference path="utils/grid/handler/ActionHandler.ts" />
+///<reference path="utils/rest/JqueryRestImpl.ts" />
 
 
 
 namespace flyshark {
     import Common = flyshark.utils.Common;
+    import Rest = flyshark.utils.rest.Rest;
+    import JqueryRestImpl = flyshark.utils.rest.JqueryRestImpl;
+    import RestMethod = flyshark.utils.rest.RestMethod;
     import SystemService = flyshark.service.system.SystemService;
     import SystemServiceImpl = flyshark.service.system.SystemServiceImpl;
     import BaseHandler = flyshark.utils.grid.handler.BaseHandler;
@@ -39,6 +43,10 @@ namespace flyshark {
     class App {
 
         systemService: SystemService = new SystemServiceImpl();
+
+        rest: Rest = new JqueryRestImpl();
+
+        linkModels: { id: string, instance: any }[] = [];
 
         constructor() {
             Common.setScreenClass();
@@ -81,6 +89,22 @@ namespace flyshark {
                 $(".ui-jqgrid-btable").each(function () {
                     $(this).autoSize();
                 });
+            }
+        }
+
+        callEvent(eventTarget: HTMLElement, eventMethod: string): void {
+            let context = $(eventTarget).closest(".link-model-context");
+            if (!context || context.length == 0) {
+                throw new Error("触发控件未包含在.link-model-context容器中！");
+            }
+            else {
+                let contextId = $(context).attr("id");
+                this.linkModels.forEach(l => {
+                    if (l.id == contextId) {
+                        l.instance["save"]();      
+                        return false;
+                    }
+                })
             }
         }
     }

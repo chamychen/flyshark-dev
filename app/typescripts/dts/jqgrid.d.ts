@@ -9,6 +9,68 @@
 // http://www.trirand.com/jqgridwiki/doku.php?id=wiki:colmodel_options
 
 
+interface DataDiff {
+
+    /**
+     * 新增记录的ID
+     * 
+     * @type {string[]}
+     * @memberof DataDiff
+     */
+    addIds: string[];
+
+
+    /**
+     * 修改记录的ID
+     * 
+     * @type {string[]}
+     * @memberof DataDiff
+     */
+    updateIds: string[];
+
+
+    /**
+     * 删除记录的ID
+     * 
+     * @type {string[]}
+     * @memberof DataDiff
+     */
+    delIds: string[];
+
+    /**
+     * 新增的具体数据
+     * 
+     * @type {any[]}
+     * @memberof DataDiff
+     */
+    addData: any[];
+
+    /**
+     * 修改的具体数据
+     * 
+     * @type {any[]}
+     * @memberof DataDiff
+     */
+    updateData: any[];
+
+    /**
+     * 删除的具体数据
+     * 
+     * @type {any[]}
+     * @memberof DataDiff
+     */
+    delData: any[];
+
+    /**
+     * 错误信息
+     * 
+     * @type {any[]}
+     * @memberof DataDiff
+     */
+    errorMsgs: any[];
+}
+
+
 interface Direction {
     /**
     * 前
@@ -524,6 +586,8 @@ interface JQuery {
 
     getDataIDs(): string[];
 
+    getDataToSave(): DataDiff;
+
     setRowData(rowid: string, data: any, cssp?: any, isCloseEdit?: boolean): void;
 
     addRowData(rowid: string, data: any, position: string, srcrowid: string): void;
@@ -561,6 +625,8 @@ interface JQuery {
      * @param rowid 
      */
     setSelection(rowid: string): void;
+
+    getEditCellValue(td: any, cm: any): { el: any, val: any, text: string };
 
     getRealRowData(rowid: string): any;
 
@@ -619,4 +685,6 @@ interface JQuery {
     addRealRow(prevRowId: string): void;
 
     delRealRow(rowid: string): void;
+
+    initEditRowElement(rowId: string): void;
 }

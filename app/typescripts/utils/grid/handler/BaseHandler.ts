@@ -1,3 +1,6 @@
+///<reference path="../../../dts/jquery.d.ts" />
+///<reference path="../../../dts/jqgrid.d.ts" />
+///<reference path="../../Common.ts" />
 ///<reference path="../../StringUtils.ts" />
 ///<reference path="../enums/Direction.ts" />
 ///<reference path="../enums/TreeColType.ts" />
@@ -6,7 +9,7 @@
 
 
 namespace flyshark.utils.grid.handler {
-
+    import Common = flyshark.utils.Common;
     import StringUtils = flyshark.utils.StringUtils;
     import TreeColType = flyshark.utils.grid.enums.TreeColType;
     import Direction = flyshark.utils.grid.enums.Direction;
@@ -58,6 +61,83 @@ namespace flyshark.utils.grid.handler {
             return rowData[keyName];
         }
 
+
+        /**
+         * 获取可编缉单元格的值
+         * 
+         * @param {*} td 
+         * @param {ColModel} cm 
+         * @returns {{ el: any, val: any, text: string }} 
+         * @memberof BaseHandler
+         */
+        getEditCellValue(td: any, cm: ColModel): { el: any, val: any, text: string } {
+            let val = null;
+            let valText: string = null;
+            let el = null;
+            switch (cm.edittype) {
+                case "checkbox":
+                    let cbv = ["1", "0"];
+                    if (cm.editoptions && cm.editoptions.value) {
+                        cbv = cm.editoptions.value.split(":");
+                    }
+                    el = $("input", td);
+                    val = $(el).is(":checked") ? cbv[0] : cbv[1];
+                    break;
+                case 'text':
+                case 'password':
+                case 'textarea':
+                case "button":
+                    el = $("input, textarea", td);
+                    val = $(el).val();
+                    break;
+                case 'select':
+                    el = $("select", td);
+                    if (!cm.editoptions.multiple) {
+                        let selVal = $("select option:selected", td).val();
+                        if (selVal != "请选择") {
+                            val = selVal;
+                            valText = $("select option:selected", td).text();
+                        }
+                    }
+                    else {
+                        let selectedVal: string[] = [];
+                        let selectedText: string[] = [];
+                        $("select option:selected", td).each(function (i, selected) {
+                            let selVal: string = $(selected).val().toString();
+                            if ($.trim(selVal) != "请选择") {
+                                let selText: string = $(selected).text();
+                                selectedText[i] = selText;
+                                selectedVal[i] = selVal;
+                            }
+                        });
+                        val = selectedVal.join(",");
+                        valText = selectedText.join(",");
+                    }
+                    break;
+                case 'custom':
+                    try {
+                        if (cm.editoptions && $.isFunction(cm.editoptions.custom_value)) {
+                            el = $(".customelement", td);
+                            val = cm.editoptions.custom_value.call($(grid), el, 'get');
+                        }
+                    }
+                    catch (e) {
+                    }
+                    break;
+            }
+            val = $.jgrid.htmlDecode(val);
+            if (valText) {
+                valText = $.jgrid.htmlDecode(valText);
+            }
+            else {
+                valText = "";
+            }
+            if (!val) {
+                val = "";
+            }
+            return { el: el, val: val, text: valText };
+        }
+
         /**
          * 获取行数据
          * 
@@ -79,16 +159,13 @@ namespace flyshark.utils.grid.handler {
                         let edit = $.jgrid.getRegional(this, 'edit', null);
                         let isEditRow = $(row).attr("editable") == "1";//行是否为可编缉状态
                         let tdList = $('td[role="gridcell"]', row);
+                        let isTreeGrid = $(grid).getN("treeGrid")
+                        let treeReader = $(grid).getTreeReader();
                         for (let i = 0; i < tdList.length; i++) {
                             let td = tdList[i];
                             let cm: ColModel = colModel[i];
                             let cmName = cm.name;
-                            //忽略树结构部分属性&完全不需要取值的列（如操作列）
-                            // || cmName == "treeLoaded" || cmName == "treeExpanded" || cmName == "treeIcon")                            
-                            // if (cm.canGetValue == undefined || !cm.canGetValue || cmName == 'cb' || cmName == 'subgrid') {
-                            //     continue;
-                            // }
-                            // else {
+
                             if (cm.canGetValue) {
                                 if (cm.treeColType == TreeColType.SortField) {
                                     let ids = $(this).getDataIDs();
@@ -103,68 +180,12 @@ namespace flyshark.utils.grid.handler {
                                         }
                                     }
                                     if (isEditCell) {
-                                        let val = null;
-                                        let valText: string = null;
-                                        switch (cm.edittype) {
-                                            case "checkbox":
-                                                let cbv = ["1", "0"];
-                                                if (cm.editoptions && cm.editoptions.value) {
-                                                    cbv = cm.editoptions.value.split(":");
-                                                }
-                                                val = $("input", td).is(":checked") ? cbv[0] : cbv[1];
-                                                break;
-                                            case 'text':
-                                            case 'password':
-                                            case 'textarea':
-                                            case "button":
-                                                val = $("input, textarea", td).val();
-                                                break;
-                                            case 'select':
-                                                if (!cm.editoptions.multiple) {
-                                                    val = $("select option:selected", td).val();
-                                                    valText = $("select option:selected", td).text();
-                                                }
-                                                else {
-                                                    let sel = $("select", td), selectedVal: any;
-                                                    selectedVal = $(sel).val();
-                                                    if (selectedVal) {
-                                                        val = selectedVal.join(",");
-                                                        let selectedText: string[] = [];
-                                                        $("select option:selected", this).each(function (i, selected) {
-                                                            selectedText[i] = $(selected).text();
-                                                        });
-                                                        valText = selectedText.join(",");
-                                                    }
-                                                }
-                                                break;
-                                            case 'custom':
-                                                try {
-                                                    if (cm.editoptions && $.isFunction(cm.editoptions.custom_value)) {
-                                                        val = cm.editoptions.custom_value.call($(grid), $(".customelement", td), 'get');
-                                                        if (data[cmName] === undefined) {
-                                                            throw "e2";
-                                                        }
-                                                    }
-                                                    else {
-                                                        throw "e1";
-                                                    }
-                                                } catch (e) {
-                                                    if (e === "e1") {
-                                                        $.jgrid.info_dialog(errors.errcap, "function 'custom_value' " + edit.msg.nodefined, edit.bClose, {
-                                                            styleUI: $(grid).getN("styleUI")
-                                                        });
-                                                    } else {
-                                                        $.jgrid.info_dialog(errors.errcap, e.message, edit.bClose, {
-                                                            styleUI: $(grid).getN("styleUI")
-                                                        });
-                                                    }
-                                                }
-                                                break;
-                                        }
-                                        data[cmName] = $.jgrid.htmlDecode(val);
-                                        if (valText) {
-                                            data[cmName + '_' + 'text'] = $.jgrid.htmlDecode(valText);
-                                        }
+                                        let editVal = $(grid).getEditCellValue(td, cm);
+                                        let val = editVal.val;
+                                        let valText: string = editVal.text;
+                                        let el = editVal.el;
+                                        data[cmName] = val;
+                                        data[cmName + '_' + 'text'] = valText;
                                     }
                                     else {
                                         if (treeGrid && cmName == $(grid).getN("ExpandColumn")) {
@@ -411,6 +432,8 @@ namespace flyshark.utils.grid.handler {
          * @memberof BaseHandler
          */
         autoSize(): void {
+            let parentWidth = $(this).closest(".ui-jqgrid").parent().width();
+            let difWidth = parentWidth - $(this).width();
             let newWidth = $(this).closest(".ui-jqgrid").parent().width();
             $(this).setGridWidth(newWidth, null);
             let isSingleTable = $(this).hasClass("single-table");
@@ -427,7 +450,7 @@ namespace flyshark.utils.grid.handler {
          * 
          * @memberof BaseHandler
          */
-        getDataToSave() {
+        getDataToSave(): DataDiff {
             let dataDiff: DataDiff = $(this).getN("dataDiff");
             if (dataDiff.addIds) {
                 dataDiff.addData = [];
@@ -512,6 +535,58 @@ namespace flyshark.utils.grid.handler {
                 }
             }
             return dataDiff;
+        }
+
+        /**
+         * 初始化编缉行中的控件及提示
+         * 
+         * @param {string} rowId 
+         * @memberof BaseHandler
+         */
+        initEditRowElement(rowId: string): void {
+            let controls = $("#" + rowId).find(".form-control");
+            if (controls && controls.length > 0) {
+                let grid = this;
+                //将select换成select2插件
+                $("#" + rowId).find("select:visible").select2({ language: "zh-CN" });
+                //值改变后更新数据缓存
+                controls.on("change", function () {
+                    let dataDiff: DataDiff = $(grid).getN("dataDiff");
+                    if (!dataDiff.addIds.indexOf(rowId) && !dataDiff.updateIds.indexOf(rowId)) {
+                        dataDiff.updateIds.push(rowId);
+                    }
+                })
+                controls.each(function () {
+                    Common.setControlToolTip(this);
+                })
+                controls.on("input", function () {
+                    Common.setControlToolTip(this);
+                })
+                //值改变后更新数据缓存
+                controls.on("propertyChange", function () {
+                    Common.setControlToolTip(this);
+                })
+
+                // controls.off("change");
+                // let settings = Common.getToolTipSettings();
+                // //toolTip提示
+                // controls.each(function () {
+                //     settings.width = $(this).outerWidth();
+                //     $(this).webuiPopover(settings);
+                // })
+                // //值改变后更新数据缓存
+                // controls.on("input", function () {
+                //     let val = StringUtils.trim($(this).val().toString());
+                //     WebuiPopovers.updateContent(this, val);
+                //     WebuiPopovers.show(this);
+                // })
+                // //值改变后更新数据缓存
+                // controls.on("propertyChange", function () {
+                //     let val = StringUtils.trim($(this).val().toString());
+                //     WebuiPopovers.updateContent(this, val);
+                //     WebuiPopovers.show(this);
+                // })
+            }
         }
     }
 }

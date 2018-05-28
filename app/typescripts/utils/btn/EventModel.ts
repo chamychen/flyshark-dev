@@ -17,7 +17,8 @@ namespace flyshark.utils.btn {
          */
         public getEventHtml(): string {
             if (!StringUtils.isEmpty(this.name) && !StringUtils.isEmpty(this.method)) {
-                return StringUtils.format(" on{0}='{1}' ", this.name, this.method);
+                this.method = this.method.replace("\"", "'");
+                return StringUtils.format(" on{0}=\"{1}\" ", this.name, this.method);
             }
             else {
                 return "";

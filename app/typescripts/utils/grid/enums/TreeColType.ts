@@ -26,6 +26,11 @@ namespace flyshark.utils.grid.enums {
         /**
          *排序列 
          */
-        SortField = "排序号"
+        SortField = "排序号",
+
+        /**
+         * 是否叶节点
+         */
+        LeafField="叶节点"
     }
 }

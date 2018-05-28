@@ -7,6 +7,7 @@
     "jquery": "~3.2.1",
     "alertifyjs":"~1.0.11",
     "jqGrid":"~5.3.1",
-    "webui-popover":"latest"
+    "webui-popover":"latest",
+    "select2": "~4.0"
   }
 }

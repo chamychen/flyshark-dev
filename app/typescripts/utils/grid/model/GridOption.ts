@@ -315,51 +315,9 @@ namespace flyshark.utils.grid.model {
             if (customMethod) {
                 customMethod.call(grid, rowid);
             }
-
-            let controls = $("#" + rowid).find(".form-control");
-            controls.off("change");
-            let settings = Common.getToolTipSettings();
-            //值改变后更新数据缓存
-            controls.on("change", function () {
-                let dataDiff: DataDiff = $(grid).getN("dataDiff");
-                if (!dataDiff.addIds.indexOf(rowid) && !dataDiff.updateIds.indexOf(rowid)) {
-                    dataDiff.updateIds.push(rowid);
-                }
-            })
-            // //值改变后更新数据缓存
-            controls.on("input", function () {
-                let val = StringUtils.trim($(this).val().toString());
-                if (val && val.length > 0) {
-                    $(this).attr("title", val);
-                }
-            })
-            //值改变后更新数据缓存
-            controls.on("propertyChange", function () {
-                let val = StringUtils.trim($(this).val().toString());
-                if (val && val.length > 0) {
-                    $(this).attr("title", val);
-                }
-            })
-
-            // //toolTip提示
-            // controls.each(function () {
-            //     settings.width = $(this).outerWidth();
-            //     $(this).webuiPopover(settings);
-            // })
-            // //值改变后更新数据缓存
-            // controls.on("input", function () {
-            //     let val = StringUtils.trim($(this).val().toString());
-            //     WebuiPopovers.updateContent(this, val);
-            //     WebuiPopovers.show(this);
-            // })
-            // //值改变后更新数据缓存
-            // controls.on("propertyChange", function () {
-            //     let val = StringUtils.trim($(this).val().toString());
-            //     WebuiPopovers.updateContent(this, val);
-            //     WebuiPopovers.show(this);
-            // })
-
+            $(grid).initEditRowElement(rowid);//初始化行中的控件、提示、值缓存           
         }
+
 
 
         /**
@@ -455,6 +413,8 @@ namespace flyshark.utils.grid.model {
                         case TreeColType.ParentField:
                             this.treeReader.parent_id_field = col.name;
                             break;
+                        case TreeColType.LeafField:
+                            this.treeReader.leaf_field = col.name;
                     }
                 }
             })
