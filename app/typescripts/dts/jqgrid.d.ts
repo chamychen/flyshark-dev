@@ -632,7 +632,7 @@ interface JQuery {
 
     getN(paramName: string): any;
 
-    setN(object: any, overwrite: boolean): void;
+    setN(object: any, overwrite?: boolean): void;
 
     getId(rowData: any): string;
 
@@ -643,6 +643,8 @@ interface JQuery {
     resetScrollX(): void;
 
     autoSize(): void;
+
+    bindData(data: any[]): void
 
     searchData(matchMetod: (rowData: any) => boolean, isSingleMatch: boolean, isOutStop: boolean): Array<any>
 
@@ -687,4 +689,6 @@ interface JQuery {
     delRealRow(rowid: string): void;
 
     initEditRowElement(rowId: string): void;
+
+    updatePossible(id: string): void;
 }

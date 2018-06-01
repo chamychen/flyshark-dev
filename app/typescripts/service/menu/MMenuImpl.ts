@@ -50,7 +50,7 @@ namespace flyshark.service.menu {
                 if (!iteration) {
                     html += "<ul class='site-menu'>";
                     let topMenu: Array<MenuEntity> = [];
-                    menuList.forEach((menu: MenuEntity) => {
+                    menuList.for2((menu: MenuEntity) => {
                         if (StringUtils.isEmpty(menu.parentMenuId)) {
                             topMenu.push(menu);
                         }
@@ -60,7 +60,7 @@ namespace flyshark.service.menu {
                         return a.sortNo - b.sortNo;
                     });
                     //从顶级目录向下迭代
-                    topMenu.forEach((menu: MenuEntity) => {
+                    topMenu.for2((menu: MenuEntity) => {
                         html += this.getMenuHtml(menuList, menu);
                     })
                     html += "</ul>";
@@ -68,7 +68,7 @@ namespace flyshark.service.menu {
                 else {
                     //查找子目录
                     let childMenuList: Array<MenuEntity> = [];
-                    menuList.forEach((menu: MenuEntity) => {
+                    menuList.for2((menu: MenuEntity) => {
                         if (menu.parentMenuId == iteration.menuId) {
                             childMenuList.push(menu);
                         }
@@ -100,7 +100,7 @@ namespace flyshark.service.menu {
                     });
                     if (childMenuList.length > 0) {
                         html += "<ul class='site-menu-sub'>";
-                        childMenuList.forEach((menu: MenuEntity) => {
+                        childMenuList.for2((menu: MenuEntity) => {
                             html += this.getMenuHtml(menuList, menu);
                         })
                         html += "</ul>";

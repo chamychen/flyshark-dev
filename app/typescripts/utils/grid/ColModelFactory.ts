@@ -60,20 +60,22 @@ namespace flyshark.utils.grid {
             colModel.treeColType = treeColType;
             switch (treeColType) {
                 case TreeColType.LinkNameField:
+                    colModel.ignoreUpdate = false;
                     colModel.width = 80;
                     colModel.fixed = true;
                     break;
                 case TreeColType.LongCodeField:
-                    colModel.ignoreUpdate = true;
+                    colModel.ignoreUpdate = false;
                     colModel.width = 120;
                     colModel.fixed = true;
                     break;
                 case TreeColType.ParentField:
+                    colModel.ignoreUpdate = false;
                     colModel.hidden = true;
                     colModel.fixed = true;
                     break;
                 case TreeColType.SortField:
-                    colModel.ignoreUpdate = true;
+                    colModel.ignoreUpdate = false;
                     colModel.hidden = true;
                     colModel.fixed = true;
                 case TreeColType.LeafField:
@@ -112,14 +114,14 @@ namespace flyshark.utils.grid {
                     validBtnModels = options.colModel.btnModels;
                 }
                 if (validBtnModels) {
-                    validBtnModels.forEach(btnModel => {
+                    validBtnModels.for2(btnModel => {
                         html += StringUtils.format(btnModel.htmlTemplate, options.rowId, options.gid);
                     })
                 }
                 return html;
             });
             //初始化行内按钮
-            btnModels.forEach(btnModel => {
+            btnModels.for2(btnModel => {
                 if (!btnModel.htmlAttributtes) {
                     btnModel.htmlAttributtes = {};
                 }

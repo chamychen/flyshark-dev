@@ -71,7 +71,7 @@ namespace flyshark.utils.btn {
             if (!StringUtils.isEmpty(this.id) && !StringUtils.isEmpty(this.title)) {
                 let eventHtml = "";
                 if (this.events) {
-                    this.events.forEach(eventModel => {
+                    this.events.for2(eventModel => {
                         eventHtml += eventModel.getEventHtml();
                     })
                 }
@@ -84,7 +84,7 @@ namespace flyshark.utils.btn {
                     html = '<div class="btn-group" role="group">';
                     html += StringUtils.format('<button type="button" id="{0}" class="btn {1} waves-effect waves-classic" data-toggle="dropdown" title="{4}" {5} {6}>{2}{3}<i class="icon md-caret-down"/></button>', this.id, this.cssClass ? this.cssClass : "btn-primary", this.iconClass ? StringUtils.format('<i class="{0}"></i> ', this.iconClass) : "", this.isOnlyIcon ? "" : this.title, this.title, StringUtils.objectToHtmlAttribute(this.htmlAttributtes), eventHtml);
                     html += StringUtils.format('<div class="dropdown-menu">', this.id); if (this.child && this.child.length > 0) {
-                        this.child.forEach(btn => {
+                        this.child.for2(btn => {
                             html += StringUtils.format('<a id="{0}" class="dropdown-item" href="javascript:void(0)" role="menuitem" {3}>{1}{2}</a>', btn.id, btn.iconClass ? StringUtils.format('<i class="{0}"></i> ', btn.iconClass) : "", btn.title ? btn.title : "", StringUtils.objectToHtmlAttribute(btn.htmlAttributtes), eventHtml);
                         })
                     }

@@ -243,9 +243,9 @@ namespace flyshark.utils.grid.handler {
          */
         batchDisableEditCell(disableData: { rowId: string, cellNames: string[] }[]) {
             if (disableData) {
-                disableData.forEach(r => {
+                disableData.for2(r => {
                     if (!StringUtils.isEmpty(r.rowId) && r.cellNames != null && r.cellNames.length > 0) {
-                        r.cellNames.forEach(cellName => {
+                        r.cellNames.for2(cellName => {
                             $(this).disableEditCell(r.rowId, cellName);
                         });
                     }
@@ -354,7 +354,7 @@ namespace flyshark.utils.grid.handler {
             let data: Array<any> = null;
             let ids = $(this).getDataIDs();
             if (ids) {
-                ids.forEach(id => {
+                ids.for2(id => {
                     let rowData = $(this).getRealRowData(id);
                     if ((matchMetod != null && matchMetod(rowData)) || !matchMetod) {
                         if (data == null) {
@@ -388,7 +388,7 @@ namespace flyshark.utils.grid.handler {
             let count = 0;
             let ids = $(this).getDataIDs();
             if (ids) {
-                ids.forEach(id => {
+                ids.for2(id => {
                     let rowData = $(this).getRealRowData(id);
                     if ((matchMetod != null && matchMetod(rowData)) || !matchMetod) {
                         count += 1;
@@ -415,7 +415,7 @@ namespace flyshark.utils.grid.handler {
             let isExists = false;
             let ids = $(this).getDataIDs();
             if (ids) {
-                ids.forEach(id => {
+                ids.for2(id => {
                     let rowData = $(this).getRealRowData(id);
                     if ((matchMetod != null && matchMetod(rowData))) {
                         isExists = true;
@@ -454,14 +454,14 @@ namespace flyshark.utils.grid.handler {
             let dataDiff: DataDiff = $(this).getN("dataDiff");
             if (dataDiff.addIds) {
                 dataDiff.addData = [];
-                dataDiff.addIds.forEach(id => {
+                dataDiff.addIds.for2(id => {
                     let rowData = $(this).getRealRowData(id);
                     dataDiff.addData.push(rowData);
                 })
             }
             if (dataDiff.delIds) {
                 dataDiff.delData = [];
-                dataDiff.delIds.forEach(id => {
+                dataDiff.delIds.for2(id => {
                     let rowData = $(this).getRealRowData(id);
                     dataDiff.delData.push(rowData);
                 })
@@ -474,9 +474,9 @@ namespace flyshark.utils.grid.handler {
                     throw new Error("Grid列配置不能为空！");
                 }
                 dataDiff.updateData = [];
-                dataDiff.updateIds.forEach(id => {
+                dataDiff.updateIds.for2(id => {
                     let oldRowData: any = null;
-                    oldData.forEach(d => {
+                    oldData.for2(d => {
                         if ($(this).getId(d) == id) {
                             oldRowData = d;
                             return false;
@@ -488,8 +488,8 @@ namespace flyshark.utils.grid.handler {
                     else {
                         let rowData = $(this).getRealRowData(id);
                         //对比新旧数据
-                        colModel.forEach(element => {
-                            if (element.canGetValue && !element.ignoreUpdate) {
+                        colModel.for2(element => {
+                            if (element.canGetValue && (typeof (element.ignoreUpdate) != undefined && element.ignoreUpdate != null && element.ignoreUpdate == false)) {
                                 let cmName = element.name;
                                 if (oldRowData[cmName] == undefined || oldRowData[cmName] == "") {
                                     oldRowData[cmName] = null;
@@ -507,6 +507,7 @@ namespace flyshark.utils.grid.handler {
                     }
                 })
                 dataDiff.updateIds = confirmUpdateIds;
+
             }
 
             let checkDatMethod: (gid: string, rowData: any) => string = $(this).getN("checkDataMethod");
@@ -522,7 +523,7 @@ namespace flyshark.utils.grid.handler {
                 if (checkDataList) {
                     let msgList: string[] = [];
                     let onlyCheckSingleRow: boolean = $(this).getN("onlyCheckSingleRow");
-                    checkDataList.forEach(d => {
+                    checkDataList.some(d => {
                         let msg: string = checkDatMethod($(this).attr("id"), d);
                         if (!StringUtils.isEmpty(msg)) {
                             msgList.push(msg);
@@ -551,10 +552,7 @@ namespace flyshark.utils.grid.handler {
                 $("#" + rowId).find("select:visible").select2({ language: "zh-CN" });
                 //值改变后更新数据缓存
                 controls.on("change", function () {
-                    let dataDiff: DataDiff = $(grid).getN("dataDiff");
-                    if (!dataDiff.addIds.indexOf(rowId) && !dataDiff.updateIds.indexOf(rowId)) {
-                        dataDiff.updateIds.push(rowId);
-                    }
+                    $(grid).updatePossible(rowId);
                 })
                 controls.each(function () {
                     Common.setControlToolTip(this);

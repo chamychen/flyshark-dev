@@ -175,7 +175,7 @@ namespace flyshark.utils.grid.model {
         /**
          * 数据传输方式
          */
-        datatype: string = "json";
+        datatype: string = "local";
 
         /**
          * 是否显示总记录数
@@ -365,11 +365,6 @@ namespace flyshark.utils.grid.model {
          */
         resetDataDiff() {
             this.dataDiff = new DataDiff();
-            this.dataDiff.addIds = [];
-            this.dataDiff.updateIds = [];
-            this.dataDiff.delIds = [];
-            this.dataDiff.addData = [];
-            this.dataDiff.updateData = [];
             this.oldData = null;
         }
 
@@ -380,7 +375,7 @@ namespace flyshark.utils.grid.model {
         private optimizeColModel() {
             let optimizeColModels: ColModel[] = [];
             let hasNotFixedCol = false;//是否具有自动宽度的列
-            this.colModel.forEach(col => {
+            this.colModel.for2(col => {
                 if (col.key) {
                     this.keyName = col.name;
                 }
@@ -453,7 +448,7 @@ namespace flyshark.utils.grid.model {
         private renderGridBtn() {
             if (this.btnModels && this.btnArea) {
                 let areaEl = this.btnArea;
-                this.btnModels.forEach(btnModel => {
+                this.btnModels.for2(btnModel => {
                     if (!btnModel.htmlAttributtes) {
                         btnModel.htmlAttributtes = {};
                     }

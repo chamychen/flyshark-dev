@@ -99,7 +99,7 @@ namespace flyshark {
             }
             else {
                 let contextId = $(context).attr("id");
-                this.linkModels.forEach(l => {
+                this.linkModels.for2(l => {
                     if (l.id == contextId) {
                         l.instance["save"]();      
                         return false;

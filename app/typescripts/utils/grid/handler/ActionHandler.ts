@@ -15,6 +15,45 @@ namespace flyshark.utils.grid.handler {
     export class ActionHandler {
 
         /**
+         * 加入可能有操作更新的队列
+         * 
+         * @param {string} id 
+         * @memberof ActionHandler
+         */
+        updatePossible(id: string): void {
+            let dataDiff = $(this).getN("dataDiff");
+            if (dataDiff.addIds.indexOf(id) == -1 && dataDiff.updateIds.indexOf(id) == -1) {
+                dataDiff.updateIds.push(id);
+            }
+            $(this).setN({ dataDiff: dataDiff});
+        }
+
+        /**
+         * 重新绑定所有数据
+         * 
+         * @param {any[]} data 
+         * @memberof ActionHandler
+         */
+        bindData(data: any[]): void {
+            if (data && data.length > 0) {
+                let isTreeGrid = $(this).getN("treeGrid");
+                data.for2(d => {
+                    if (isTreeGrid) {
+                        $(this).addTreeNode(d);
+
+                    }
+                    else {
+                        $(this).addRowData($(this).getId(d), d, null, null);
+                    }
+                })
+                if (isTreeGrid) {
+                    $(this).resetTreeGrid();
+                }
+            }
+            $(this).setN({ oldData: data, dataDiff: new DataDiff() }, false);
+        }
+
+        /**
          * 新增行
          * 
          * @param {string} [prevRowId=null] 要插入位置的上一行id,可为空
@@ -54,7 +93,7 @@ namespace flyshark.utils.grid.handler {
                 $(this).batchEditExit();
             }
             $(this).editRow(rowid, false);
-            $('tr[tabindex=0]').attr("tabindex",-1);
+            $('tr[tabindex=0]').attr("tabindex", -1);
             $('#' + rowid).attr("tabindex", 0);
         }
 
@@ -70,7 +109,7 @@ namespace flyshark.utils.grid.handler {
             let dataDiff: DataDiff = $(this).getN("dataDiff");
             if (isTreeGrid) {
                 let delData = $(this).delTreeNode(rowid);
-                delData.forEach(d => {
+                delData.for2(d => {
                     let ind = dataDiff.addIds.indexOf(d.id);
                     if (ind > -1) {
                         dataDiff.addIds.splice(ind, 1);

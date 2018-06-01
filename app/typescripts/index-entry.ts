@@ -53,7 +53,7 @@ namespace flyshark {
                 return;
             }
 
-            menuList.forEach((menu: Menu) => {
+            menuList.for2((menu: Menu) => {
                 if (menu.menuId == menuId) {
                     currentMenu = menu;
                     return false;
@@ -99,7 +99,7 @@ namespace flyshark {
             if (iterationMenu != null) {
                 $("#" + iterationMenu.menuId).closest("li").addClass("active");
                 if (iterationMenu.parentMenuId) {
-                    menuList.forEach((menu: Menu) => {
+                    menuList.for2((menu: Menu) => {
                         if (menu.menuId == iterationMenu.parentMenuId) {
                             html = this.setMenuActive(menu, menuList, actionMenu) + html;
                             return false;

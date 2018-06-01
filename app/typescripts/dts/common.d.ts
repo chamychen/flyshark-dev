@@ -9,3 +9,7 @@ interface JQuery {
 
     select2(options?: any): void;
 }
+
+interface Array<T> {
+    for2(callBack: (value: T, index: number) => void): void;
+}

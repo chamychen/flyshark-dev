@@ -64,5 +64,13 @@ namespace flyshark.utils.grid.model {
          * @memberof DataDiff
          */
         errorMsgs: any[];
+
+        constructor() {
+            this.addIds = [];
+            this.updateIds = [];
+            this.delIds = [];
+            this.addData = [];
+            this.updateData = [];
+        }
     }
 }

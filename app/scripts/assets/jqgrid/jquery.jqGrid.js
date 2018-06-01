@@ -18450,7 +18450,7 @@
                             i++;
                             var treeColModel = {
                                 canGetValue: true,
-                                ignoreUpdate: false,
+                                ignoreUpdate: true,
                                 name: n,
                                 width: 1,
                                 hidden: true,

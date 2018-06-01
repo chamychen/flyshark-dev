@@ -25,7 +25,7 @@ namespace flyshark.utils.rest {
             $.ajax(url, {
                 async: isAsync,
                 type: methodType,
-                data: data,
+                data: methodType == RestMethod.GET ? data : JSON.stringify(data),
                 contentType: "application/json;charset=utf-8",
                 crossDomain: true,
                 success: function (result, status, xhr) {

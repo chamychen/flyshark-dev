@@ -1,10 +1,11 @@
 ///<reference path="../dto/LinkModel.ts" />
+///<reference path="../dto/RequestModel.ts" />
 
 namespace flyshark.utils {
     import LinkModel = flyshark.dto.LinkModel;
 
     export abstract class CommonEntry {
-        protected linkModel: LinkModel;
+        public linkModel: LinkModel;
 
         constructor(contextId: string, linkModelName: string) {
             if (StringUtils.isEmpty(contextId)) {

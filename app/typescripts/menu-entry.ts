@@ -7,13 +7,16 @@
 ///<reference path="utils/grid/GridOptionFactory.ts" />
 ///<reference path="utils/grid/GridHandler.ts" />
 ///<reference path="utils/rest/JqueryRestImpl.ts" />
+///<reference path="utils/Common.ts" />
 ///<reference path="utils/CommonEntry.ts" />
 ///<reference path="dto/LinkModel.ts" />
+///<reference path="dto/RequestModel.ts" />
 
 let flysharkApp = flyshark.Flyshark.get();
 $(function () {
     let menuEntry: flyshark.MenuEntry = new flyshark.MenuEntry("menuContext");
     menuEntry.init();
+    menuEntry.linkModel.load();
 })
 
 namespace flyshark {
@@ -32,9 +35,14 @@ namespace flyshark {
     import ResponseModel = flyshark.dto.ResponseModel;
     import LinkModel = flyshark.dto.LinkModel;
     import LinkPropertyContextType = flyshark.dto.LinkPropertyContextType;
+    import Common = flyshark.utils.Common;
     import CommonEntry = flyshark.utils.CommonEntry;
+    import RequestModel = flyshark.dto.RequestModel;
 
     export class MenuEntry extends CommonEntry {
+
+        lmUrl: string = flysharkApp.systemService.getServerUrl("/lm");
+
         constructor(contextId: string) {
             super(contextId, "MenuModel");
         }
@@ -49,8 +57,11 @@ namespace flyshark {
         }
 
         save() {
-            let d = this.linkModel.getData();
-            debugger;
+            this.linkModel.save(response => {
+                if (response.success) {
+                    Common.alertOk("保存成功");
+                }
+            });
         }
 
         /**
@@ -66,7 +77,7 @@ namespace flyshark {
                 (result: ResponseModel<Array<string>>, status: any, xhr: any) => {
                     if (result.success) {
                         if (result.data) {
-                            result.data.forEach(name => {
+                            result.data.for2(name => {
                                 let tName = name.substr(name.lastIndexOf(".") + 1);
                                 linkModelClassesData += StringUtils.format("{0}:{1};", name, tName);
                             })
@@ -80,7 +91,6 @@ namespace flyshark {
             //列自定义
             let menuId = ColModelFactory.createHiddenColModel("menuId", true);
             let parentMenuId = ColModelFactory.createTreeColModel("parentMenuId", TreeColType.ParentField);
-            let isLeaf = ColModelFactory.createTreeColModel("isLeaf", TreeColType.LeafField);
             let longCode = ColModelFactory.createTreeColModel("longCode", TreeColType.LongCodeField);
             let iconClass = ColModelFactory.createEditColModel("iconClass", "IconClass", 100);
             let menuTitle = ColModelFactory.createEditColModel("menuTitle", "菜单标题", 250, false);
@@ -89,18 +99,20 @@ namespace flyshark {
             let url = ColModelFactory.createEditColModel("url", "URL链接地址", 300, false);
             let linkName = ColModelFactory.createTreeColModel("linkName", TreeColType.LinkNameField);
             let status = ColModelFactory.createDefaultColModel("status", "状态");
+            let isLeaf = ColModelFactory.createTreeColModel("isLeaf", TreeColType.LeafField);
             let sortNo = ColModelFactory.createTreeColModel("sortNo", TreeColType.SortField);
+            //初始化行内按钮
+            let addBtn_R = BtnFactory.createAddBtn("addMenu", [new EventModel("flyshark.utils.grid.GridHandler.onAddRow(this)")], true);
+            let delBtn_R = BtnFactory.createDelBtn("delMenu", [new EventModel("flyshark.utils.grid.GridHandler.onDelRow(this)")], true);
+            let operationCol = ColModelFactory.createBtnColModel([addBtn_R, delBtn_R]);
+            //colModel定议
+            let colModel: ColModel[] = [menuId, isLeaf, parentMenuId, operationCol, longCode, menuTitle, linkModelClasses, url, iconClass, linkName, status, sortNo];
 
             //初始化表格按钮
             let addBtn = BtnFactory.createAddBtn("addMenu", [new EventModel("flyshark.utils.grid.GridHandler.onAddRow(this)")]);
             let saveBtn = BtnFactory.createSaveBtn("saveMenu", [new EventModel("flysharkApp.callEvent(this,'save')")]);
             let gridBtns = [addBtn, saveBtn];
 
-            //初始化行内按钮
-            let addBtn_R = BtnFactory.createAddBtn("addMenu", [new EventModel("flyshark.utils.grid.GridHandler.onAddRow(this)")], true);
-            let delBtn_R = BtnFactory.createDelBtn("delMenu", [new EventModel("flyshark.utils.grid.GridHandler.onDelRow(this)")], true);
-            let operationCol = ColModelFactory.createBtnColModel([addBtn_R, delBtn_R]);
-            let colModel: ColModel[] = [menuId, isLeaf, parentMenuId, operationCol, longCode, menuTitle, linkModelClasses, url, iconClass, linkName, status, sortNo];
 
             //初始化grid
             let rowTitleTemplate = "{linkName}-{url}";

@@ -183,7 +183,7 @@ namespace flyshark.utils.grid.handler {
                     if (searchData && searchData.length > 0) {
                         data = [];
                         //在后代节点中过滤可加速性能
-                        searchData.forEach(r => {
+                        searchData.for2(r => {
                             if (r[parentColoumnName] == id) {
                                 data.push(r);
                             }
@@ -245,7 +245,7 @@ namespace flyshark.utils.grid.handler {
                     }, false, true);
                     if (searchData && searchData.length > 0) {
                         //在后代节点中过滤可加速性能
-                        searchData.forEach(r => {
+                        searchData.for2(r => {
                             if (r[parentColoumnName] == id) {
                                 childCount += 1;
                             }
@@ -295,7 +295,7 @@ namespace flyshark.utils.grid.handler {
 
                     let ids = $(this).getDataIDs();
                     if (ids) {
-                        ids.forEach(id => {
+                        ids.for2(id => {
                             let thisRowData = $(this).getRealRowData(id);
                             let thisLongCode = thisRowData[longCodeColumnName];
                             let match = thisLongCode.match(reg);
@@ -309,7 +309,7 @@ namespace flyshark.utils.grid.handler {
                                     let newLongCode = match1 + match2.toString() + match3;
                                     thisRowData[longCodeColumnName] = newLongCode;
                                     $(this).setRowData(id, thisRowData);
-
+                                    $(this).updatePossible(id);
                                 }
                             }
                         })
@@ -448,7 +448,7 @@ namespace flyshark.utils.grid.handler {
             }
 
             if (data && data.length > 0) {
-                data.forEach(d => {
+                data.for2(d => {
                     let thisId = $(this).getId(d);
                     let thisLongCode = d[longCodeColumnName];
                     let thisIsSelect = $("#" + thisId).attr("aria-selected") == "true";
@@ -468,7 +468,9 @@ namespace flyshark.utils.grid.handler {
                     if (childCount == 0) {
                         let leafFieldName = $(this).getTreeReader().leaf_field;
                         parent[leafFieldName] = true;
-                        $(this).setRowData($(this).getId(parent), parent, null);
+                        let parentId = $(this).getId(parent);
+                        $(this).setRowData(parentId, parent, null);
+                        $(this).updatePossible(parentId);
                     }
                 }
                 //偏移后续节点
@@ -614,6 +616,7 @@ namespace flyshark.utils.grid.handler {
                                     d.rowD[parentColoumnName] = newParentId;
                                 }
                                 $(this).addTreeNode(d.rowD);
+                                $(this).updatePossible(d.id);
                                 if (delData.length > 1) {
                                     d.rowD[leafFieldName] = false;
                                     $(this).setRowData(d.id, d.rowD, null);
@@ -627,6 +630,7 @@ namespace flyshark.utils.grid.handler {
                                 d.rowD.treeLevel = parseInt(d.rowD.treeLevel) + diffLevel;
                                 d.longCode = thisNewLongCode;
                                 $(this).addRowData(d.id, d.rowD, Direction.After, prevDataId);
+                                $(this).updatePossible(d.id);
                             }
                             if (isSelect) {
                                 $(this).setSelection(d.id);
